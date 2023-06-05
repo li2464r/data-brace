@@ -17,4 +17,10 @@ public class GlobalException {
         return Result.fail("处理异常");
     }
 
+    @ExceptionHandler(value = Exception.class)
+    public Result doHandlerRuntimeException(Exception e) {
+        logger.error("处理异常:", e);
+        return Result.fail("处理异常");
+    }
+
 }
