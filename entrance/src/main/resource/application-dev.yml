@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: practice
+  autoconfigure:
+    #排除自动配置的类
+    exclude:
+      - org.springframework.boot.autoconfigure.mail.MailSenderAutoConfiguration
+      - org.springframework.boot.autoconfigure.mail.MailSenderValidatorAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.redis.RedisReactiveAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration
+  datasource:
+    username: root
+    password: Lijieqiang.0204
+    url: jdbc:mysql://10.108.2.192:3306/databrace?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    port: 6379
+    host: 10.108.2.192
+    database: 0
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+    cache-enabled: true
+
+server:
+  port: 8082
+
+# rocketMq配置
+rocket-mq:
+  ip: 10.108.2.192:9876
+  group-name: ${spring.application.name}
