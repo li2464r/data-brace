@@ -1,4 +1,3 @@
-/*
 package com.assign.entrance.base.cache;
 
 import org.apache.ibatis.cache.Cache;
@@ -8,11 +7,11 @@ import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-*/
 /**
  * @author Administrator
  * @date 2022/3/30 0030 10:37
- *//*
+ */
+
 
 public class MybatisRedisCache implements Cache {
 
@@ -63,4 +62,3 @@ public class MybatisRedisCache implements Cache {
         return readWriteLock;
     }
 }
-*/

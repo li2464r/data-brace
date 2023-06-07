@@ -1,16 +1,9 @@
-/*
 package com.assign.entrance.base.cache;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
-
-*/
-/**
- * @author Administrator
- * @date 2022/3/30 0030 11:38
- *//*
 
 @Component
 public class SpringBeanContext <T> implements ApplicationContextAware {
@@ -32,4 +25,3 @@ public class SpringBeanContext <T> implements ApplicationContextAware {
     }
 
 }
-*/
