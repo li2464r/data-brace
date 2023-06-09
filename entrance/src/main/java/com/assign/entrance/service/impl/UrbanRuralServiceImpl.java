@@ -17,6 +17,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -87,52 +88,163 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
 
     // ----------------------------------------------------------------
 
-    Map<Integer, String> map = new HashMap<>();
-    String reg = "[^\u4e00-\u9fa5]";
-
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Object insertUrbanRural() throws Exception {
+        int level = 0;
 
-        UrbanRural urbanRural1 = new UrbanRural();
-        urbanRural1.setPid(0);
-        urbanRural1.setAreaName("中国");
-        urbanRural1.setAreaClass(0);
-        urbanRural1.setAbbreviateEn("CHN");
-        this.saveOrUpdate(urbanRural1);
+        UrbanRural urbanRural = new UrbanRural();
+        urbanRural.setPid(0);
+        urbanRural.setAreaName("中国");
+        urbanRural.setAbbreviateEn("CHN");
+        urbanRural.setAreaClass(level);
+        this.saveOrUpdate(urbanRural);
 
-
-        // 初始化
-        map.put(1, "provincetr");
-        map.put(2, "citytr");
-        map.put(3, "countytr");
-        map.put(4, "towntr");
-        map.put(5, "villagetr");
-
-        int level = 1;
         // 获取全国各个省级信息
-        // http://www.stats.gov.cn/sj/tjbz/tjyqhdmhcxhfdm/2022/
         Document connect = connect("http://www.stats.gov.cn/sj/tjbz/tjyqhdmhcxhfdm/2022/");
-        Elements rowProvince = connect.select("tr." + map.get(level));
-        for (Element provinceElement : rowProvince) {
+        Elements provinceElements = connect.select("tr.provincetr");
+        // 获取省
+        provinceInfo(urbanRural.getId(), urbanRural.getAreaCode(), provinceElements, level + 1);
+        return true;
+    }
+
+    // 获取省
+    private void provinceInfo(Integer parentId, String areaCodeParent, Elements provinceElements, int level) throws Exception {
+        String reg = "[^\u4e00-\u9fa5]";
+        for (Element provinceElement : provinceElements) {
             // 省
             Elements elements = provinceElement.select("a");
             for (Element element : elements) {
                 // 替换a标签
                 String provinceName = element.toString().replaceAll(reg, "");
-                if (provinceName.contains("山西")) {
-                    // SET
+                if (provinceName.contains("北京")) {
                     UrbanRural urbanRural = new UrbanRural();
-                    urbanRural.setPid(1);
+                    urbanRural.setPid(parentId);
+                    urbanRural.setAreaCode("");
                     urbanRural.setAreaName(provinceName);
+                    urbanRural.setAreaCodeParent(areaCodeParent);
                     urbanRural.setAreaClass(level);
                     urbanRural.setAbbreviateEn(toCharacterInitials(provinceName));
                     this.saveOrUpdate(urbanRural);
-                    // ADD
-                    printInfoProvince(urbanRural.getId(), element, level + 1);
+
+                    cityInfo(urbanRural.getId(), urbanRural.getAreaCodeParent(), element, level + 1);
                 }
             }
         }
-        return null;
+    }
+
+    // 获取市
+    private void cityInfo(Integer parentId, String areaCodeParent, Element provinceElement, int level) throws Exception {
+        // 获取子级城市
+        Document doc = connect(provinceElement.attr("abs:href"));
+        Elements cityElements = doc.select("tr.citytr");
+        for (Element cityElement : cityElements) {
+            String cityCode = cityElement.select("td").first().text();
+            String cityName = cityElement.select("td").last().text();
+            if (cityName.contains("市辖区")) {
+                // 判断是不是北京的市辖区
+                if (!cityCode.contains("110100000000")
+                        || !cityCode.contains("120100000000")
+                        || !cityCode.contains("310100000000")
+                        || !cityCode.contains("500100000000")) {
+                    continue;
+                }
+            }
+            UrbanRural urbanRural = new UrbanRural();
+            urbanRural.setPid(parentId);
+            urbanRural.setAreaCode(cityCode);
+            urbanRural.setAreaName(cityName);
+            urbanRural.setAreaCodeParent(areaCodeParent);
+            urbanRural.setAreaClass(level);
+            urbanRural.setAbbreviateEn(toCharacterInitials(cityName));
+            this.saveOrUpdate(urbanRural);
+            Elements select = cityElement.select("a");
+            if (select.size() != 0) {
+                countyInfo(urbanRural.getId(), urbanRural.getAreaCode(), select.last(), level + 1);
+            }
+        }
+    }
+
+    // 获取县
+    private void countyInfo(Integer parentId, String areaCodeParent, Element cityElement, int level) throws Exception {
+        // 获取子级城市
+        Document doc = connect(cityElement.attr("abs:href"));
+        Elements countyElements = doc.select("tr.countytr");
+        for (Element countyElement : countyElements) {
+            String cityCode = countyElement.select("td").first().text();
+            String cityName = countyElement.select("td").last().text();
+            if (cityName.contains("市辖区")) {
+                // 判断是不是北京的市辖区
+                if (!cityCode.contains("110100000000")) {
+                    continue;
+                }
+            }
+            UrbanRural urbanRural = new UrbanRural();
+            urbanRural.setPid(parentId);
+            urbanRural.setAreaCode(cityCode);
+            urbanRural.setAreaName(cityName);
+            urbanRural.setAreaCodeParent(areaCodeParent);
+            urbanRural.setAreaClass(level);
+            urbanRural.setAbbreviateEn(toCharacterInitials(cityName));
+            this.saveOrUpdate(urbanRural);
+            Elements select = countyElement.select("a");
+            if (select.size() != 0) {
+                townInfo(urbanRural.getId(), urbanRural.getAreaCode(), select.last(), level + 1);
+            }
+        }
+    }
+
+    // 获取镇
+    private void townInfo(Integer parentId, String areaCodeParent, Element countyElement, int level) throws Exception {
+        // 获取子级城市
+        Document doc = connect(countyElement.attr("abs:href"));
+        Elements townElements = doc.select("tr.towntr");
+        for (Element townElement : townElements) {
+            String cityCode = townElement.select("td").first().text();
+            String cityName = townElement.select("td").last().text();
+            UrbanRural urbanRural = new UrbanRural();
+            urbanRural.setPid(parentId);
+            urbanRural.setAreaCode(cityCode);
+            urbanRural.setAreaName(cityName);
+            urbanRural.setAreaCodeParent(areaCodeParent);
+            urbanRural.setAreaClass(level);
+            urbanRural.setAbbreviateEn(toCharacterInitials(cityName));
+            this.saveOrUpdate(urbanRural);
+            Elements select = townElement.select("a");
+            if (select.size() != 0) {
+                villageInfo(urbanRural.getId(), urbanRural.getAreaCode(), select.last(), level + 1);
+            }
+        }
+    }
+
+    // 获取村
+    private void villageInfo(Integer parentId, String areaCodeParent, Element townElement, int level) throws Exception {
+        // 获取子级城市
+        Document doc = connect(townElement.attr("abs:href"));
+        Elements villageElements = doc.select("tr.villagetr");
+        for (Element villageElement : villageElements) {
+            String cityCode = villageElement.select("td").first().text();
+            String cityName = villageElement.select("td").last().text();
+            String villageCode = "";
+            if (level == 5) {
+                villageCode = villageElement.select("td").get(1).text();
+            }
+            UrbanRural urbanRural = new UrbanRural();
+            urbanRural.setPid(parentId);
+            urbanRural.setAreaCode(cityCode);
+            urbanRural.setAreaName(cityName);
+            urbanRural.setAreaCodeParent(areaCodeParent);
+            urbanRural.setAreaClass(level);
+            urbanRural.setUrbanRuralClass(villageCode);
+            urbanRural.setAbbreviateEn(toCharacterInitials(cityName));
+            this.saveOrUpdate(urbanRural);
+        }
+    }
+
+    private Document connect(String url) throws Exception {
+        Thread.sleep(500);
+//        Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("114.102.45.178", 8089));
+        return Jsoup.connect(url).timeout(30 * 1000).get();
     }
 
     private String toCharacterInitials(String name) {
@@ -143,46 +255,6 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
             s.append(substring);
         }
         return s.toString().toUpperCase(Locale.ROOT);
-    }
-
-    private void printInfoProvince(Integer parentId, Element element, int level) throws Exception {
-        // 获取子级城市
-        Document doc = connect(element.attr("abs:href"));
-        Elements childElement = doc.select("tr." + map.get(level));
-        for (Element item : childElement) {
-
-            String cityCode = item.select("td").first().text();
-            String cityName = item.select("td").last().text();
-            String villageCode = "";
-            if (level == 5) {
-                villageCode = item.select("td").get(1).text();
-            }
-
-            if (!cityName.contains("市辖区") || cityCode.contains("110100000000")) {
-                UrbanRural urbanRural = new UrbanRural();
-                urbanRural.setPid(parentId);
-                urbanRural.setAreaCode(cityCode);
-                urbanRural.setAreaName(cityName);
-                urbanRural.setAreaClass(level);
-                urbanRural.setUrbanRuralClass(villageCode);
-                urbanRural.setAbbreviateEn(toCharacterInitials(cityName));
-                this.saveOrUpdate(urbanRural);
-                if (level != 5) {
-                    parentId = urbanRural.getId();
-                }
-            }
-            // 在递归调用的时候，这里是判断是否是村一级的数据，村一级的数据没有a标签
-            Elements select = item.select("a");
-            if (select.size() != 0) {
-                printInfoProvince(parentId, select.last(), level + 1);
-            }
-        }
-    }
-
-    private Document connect(String url) throws Exception {
-        Thread.sleep(500);
-//        Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("114.102.45.178", 8089));
-        return Jsoup.connect(url).timeout(30 * 1000).get();
     }
 
 }
