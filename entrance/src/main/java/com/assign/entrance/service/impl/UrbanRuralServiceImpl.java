@@ -142,11 +142,13 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
             String cityCode = cityElement.select("td").first().text();
             String cityName = cityElement.select("td").last().text();
             if (cityName.contains("市辖区")) {
+                ArrayList<String> arrayList = new ArrayList<>();
+                arrayList.add("110100000000");
+                arrayList.add("120100000000");
+                arrayList.add("310100000000");
+                arrayList.add("500100000000");
                 // 判断是不是北京的市辖区
-                if (!cityCode.contains("110100000000")
-                        || !cityCode.contains("120100000000")
-                        || !cityCode.contains("310100000000")
-                        || !cityCode.contains("500100000000")) {
+                if (!arrayList.contains(cityCode)) {
                     continue;
                 }
             }
@@ -174,8 +176,13 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
             String cityCode = countyElement.select("td").first().text();
             String cityName = countyElement.select("td").last().text();
             if (cityName.contains("市辖区")) {
+                ArrayList<String> arrayList = new ArrayList<>();
+                arrayList.add("110100000000");
+                arrayList.add("120100000000");
+                arrayList.add("310100000000");
+                arrayList.add("500100000000");
                 // 判断是不是北京的市辖区
-                if (!cityCode.contains("110100000000")) {
+                if (!arrayList.contains(cityCode)) {
                     continue;
                 }
             }
