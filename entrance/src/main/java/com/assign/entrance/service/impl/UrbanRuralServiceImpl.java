@@ -18,8 +18,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
-import java.net.InetSocketAddress;
-import java.net.Proxy;
 import java.util.*;
 
 @Service
@@ -94,6 +92,15 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
 
     @Override
     public Object insertUrbanRural() throws Exception {
+
+        UrbanRural urbanRural1 = new UrbanRural();
+        urbanRural1.setPid(0);
+        urbanRural1.setAreaName("中国");
+        urbanRural1.setAreaClass(0);
+        urbanRural1.setAbbreviateEn("CHN");
+        this.saveOrUpdate(urbanRural1);
+
+
         // 初始化
         map.put(1, "provincetr");
         map.put(2, "citytr");
@@ -115,13 +122,13 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
                 if (provinceName.contains("山西")) {
                     // SET
                     UrbanRural urbanRural = new UrbanRural();
-                    urbanRural.setPid(0);
+                    urbanRural.setPid(1);
                     urbanRural.setAreaName(provinceName);
                     urbanRural.setAreaClass(level);
                     urbanRural.setAbbreviateEn(toCharacterInitials(provinceName));
                     this.saveOrUpdate(urbanRural);
                     // ADD
-                    printInfoProvince(urbanRural.getId(), urbanRural.getId(), element, level + 1);
+                    printInfoProvince(urbanRural.getId(), element, level + 1);
                 }
             }
         }
@@ -138,22 +145,21 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
         return s.toString().toUpperCase(Locale.ROOT);
     }
 
-    private void printInfoProvince(Integer id, Integer parentId, Element element, int level) throws Exception {
-        parentId = id;
+    private void printInfoProvince(Integer parentId, Element element, int level) throws Exception {
         // 获取子级城市
         Document doc = connect(element.attr("abs:href"));
         Elements childElement = doc.select("tr." + map.get(level));
         for (Element item : childElement) {
-            id++;
+
             String cityCode = item.select("td").first().text();
             String cityName = item.select("td").last().text();
             String villageCode = "";
             if (level == 5) {
                 villageCode = item.select("td").get(1).text();
             }
+
             if (!cityName.contains("市辖区") || cityCode.contains("110100000000")) {
                 UrbanRural urbanRural = new UrbanRural();
-                urbanRural.setId(id);
                 urbanRural.setPid(parentId);
                 urbanRural.setAreaCode(cityCode);
                 urbanRural.setAreaName(cityName);
@@ -161,20 +167,22 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
                 urbanRural.setUrbanRuralClass(villageCode);
                 urbanRural.setAbbreviateEn(toCharacterInitials(cityName));
                 this.saveOrUpdate(urbanRural);
+                if (level != 5) {
+                    parentId = urbanRural.getId();
+                }
             }
-
             // 在递归调用的时候，这里是判断是否是村一级的数据，村一级的数据没有a标签
             Elements select = item.select("a");
             if (select.size() != 0) {
-                printInfoProvince(id, parentId, select.last(), level + 1);
+                printInfoProvince(parentId, select.last(), level + 1);
             }
         }
     }
 
     private Document connect(String url) throws Exception {
         Thread.sleep(500);
-        Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("114.102.45.178", 8089));
-        return Jsoup.connect(url).proxy(proxy).timeout(30 * 1000).get();
+//        Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("114.102.45.178", 8089));
+        return Jsoup.connect(url).timeout(30 * 1000).get();
     }
 
 }
