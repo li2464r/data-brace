@@ -29,8 +29,3 @@ server:
 
 remote:
   ip: dev.ikang.server.com
-
-# rocketMq配置
-rocket-mq:
-  ip: ${remote.ip}:9876
-  group-name: ${spring.application.name}
