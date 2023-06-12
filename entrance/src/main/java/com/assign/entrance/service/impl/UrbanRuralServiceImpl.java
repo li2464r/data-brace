@@ -186,17 +186,19 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
                     continue;
                 }
             }
-            UrbanRural urbanRural = new UrbanRural();
-            urbanRural.setPid(parentId);
-            urbanRural.setAreaCode(cityCode);
-            urbanRural.setAreaName(cityName);
-            urbanRural.setAreaCodeParent(areaCodeParent);
-            urbanRural.setAreaClass(level);
-            urbanRural.setAbbreviateEn(toCharacterInitials(cityName));
-            this.saveOrUpdate(urbanRural);
-            Elements select = countyElement.select("a");
-            if (select.size() != 0) {
-                townInfo(urbanRural.getId(), urbanRural.getAreaCode(), select.last(), level + 1);
+            if (cityName.contains("西城区")) {
+                UrbanRural urbanRural = new UrbanRural();
+                urbanRural.setPid(parentId);
+                urbanRural.setAreaCode(cityCode);
+                urbanRural.setAreaName(cityName);
+                urbanRural.setAreaCodeParent(areaCodeParent);
+                urbanRural.setAreaClass(level);
+                urbanRural.setAbbreviateEn(toCharacterInitials(cityName));
+                this.saveOrUpdate(urbanRural);
+                Elements select = countyElement.select("a");
+                if (select.size() != 0) {
+                    townInfo(urbanRural.getId(), urbanRural.getAreaCode(), select.last(), level + 1);
+                }
             }
         }
     }
