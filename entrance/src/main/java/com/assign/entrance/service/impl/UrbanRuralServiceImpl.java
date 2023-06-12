@@ -111,7 +111,8 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
         // 先查询是否存在
         QueryWrapper<UrbanRural> urbanRuralQueryWrapper = new QueryWrapper<>();
         urbanRuralQueryWrapper.eq("area_name", areaName);
-        urbanRuralQueryWrapper.eq("area_code", areaCode);
+        urbanRuralQueryWrapper.eq(null != areaCode, "area_code", areaCode);
+        urbanRuralQueryWrapper.eq( "normal", 1);
         UrbanRural urbanRural = baseMapper.selectOne(urbanRuralQueryWrapper);
         if (null == urbanRural) {
             urbanRural = new UrbanRural();
@@ -122,7 +123,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
             urbanRural.setAbbreviateEn(abbreviateEn);
             urbanRural.setAreaClass(areaClass);
             urbanRural.setUrbanRuralClass(urbanRuralClass);
-            this.saveOrUpdate(urbanRural);
+//            this.saveOrUpdate(urbanRural);
         }
         return urbanRural;
     }
@@ -139,7 +140,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
                 if (provinceName.contains("北京")) {
                     // 保存
                     UrbanRural urbanRural = saveOrUpdate(parentId, null, provinceName, areaCodeParent, toCharacterInitials(provinceName), level, null);
-                    cityInfo(urbanRural.getId(), urbanRural.getAreaCodeParent(), element, level + 1);
+//                    cityInfo(urbanRural.getId(), urbanRural.getAreaCodeParent(), element, level + 1);
                 }
             }
         }
