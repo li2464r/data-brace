@@ -92,14 +92,8 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
     @Transactional(rollbackFor = Exception.class)
     public Object insertUrbanRural() throws Exception {
         int level = 0;
-
-        UrbanRural urbanRural = new UrbanRural();
-        urbanRural.setPid(0);
-        urbanRural.setAreaName("中国");
-        urbanRural.setAbbreviateEn("CHN");
-        urbanRural.setAreaClass(level);
-        this.saveOrUpdate(urbanRural);
-
+        // 保存
+        UrbanRural urbanRural = saveOrUpdate(0, null, "中国", null, "CHN", null, null);
         // 获取全国各个省级信息
         Document connect = connect("http://www.stats.gov.cn/sj/tjbz/tjyqhdmhcxhfdm/2022/");
         Elements provinceElements = connect.select("tr.provincetr");
@@ -108,9 +102,28 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
         return true;
     }
 
+    private UrbanRural saveOrUpdate(Integer pid, String areaCode, String areaName, String areaCodeParent, String abbreviateEn, Integer areaClass, String urbanRuralClass) {
+        // 先查询是否存在
+        QueryWrapper<UrbanRural> urbanRuralQueryWrapper = new QueryWrapper<>();
+        urbanRuralQueryWrapper.eq("area_name", "中国");
+        UrbanRural urbanRural = baseMapper.selectOne(urbanRuralQueryWrapper);
+        if (null == urbanRural) {
+            urbanRural = new UrbanRural();
+            urbanRural.setPid(pid);
+            urbanRural.setAreaCode(areaCode);
+            urbanRural.setAreaName(areaName);
+            urbanRural.setAreaCodeParent(areaCodeParent);
+            urbanRural.setAbbreviateEn(abbreviateEn);
+            urbanRural.setAreaClass(areaClass);
+            urbanRural.setUrbanRuralClass(urbanRuralClass);
+            this.saveOrUpdate(urbanRural);
+        }
+        return urbanRural;
+    }
+
     // 获取省
     private void provinceInfo(Integer parentId, String areaCodeParent, Elements provinceElements, int level) throws Exception {
-        String reg = "[^\u4e00-\u9fa5]";
+        String reg = "[^一-龥]";
         for (Element provinceElement : provinceElements) {
             // 省
             Elements elements = provinceElement.select("a");
@@ -118,15 +131,8 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
                 // 替换a标签
                 String provinceName = element.toString().replaceAll(reg, "");
                 if (provinceName.contains("北京")) {
-                    UrbanRural urbanRural = new UrbanRural();
-                    urbanRural.setPid(parentId);
-                    urbanRural.setAreaCode("");
-                    urbanRural.setAreaName(provinceName);
-                    urbanRural.setAreaCodeParent(areaCodeParent);
-                    urbanRural.setAreaClass(level);
-                    urbanRural.setAbbreviateEn(toCharacterInitials(provinceName));
-                    this.saveOrUpdate(urbanRural);
-
+                    // 保存
+                    UrbanRural urbanRural = saveOrUpdate(parentId, null, provinceName, areaCodeParent, toCharacterInitials(provinceName), level, null);
                     cityInfo(urbanRural.getId(), urbanRural.getAreaCodeParent(), element, level + 1);
                 }
             }
@@ -152,14 +158,9 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
                     continue;
                 }
             }
-            UrbanRural urbanRural = new UrbanRural();
-            urbanRural.setPid(parentId);
-            urbanRural.setAreaCode(cityCode);
-            urbanRural.setAreaName(cityName);
-            urbanRural.setAreaCodeParent(areaCodeParent);
-            urbanRural.setAreaClass(level);
-            urbanRural.setAbbreviateEn(toCharacterInitials(cityName));
-            this.saveOrUpdate(urbanRural);
+            // 保存
+            UrbanRural urbanRural = saveOrUpdate(parentId, cityCode, cityName, areaCodeParent, toCharacterInitials(cityName), level, null);
+            // 获取下一级
             Elements select = cityElement.select("a");
             if (select.size() != 0) {
                 countyInfo(urbanRural.getId(), urbanRural.getAreaCode(), select.last(), level + 1);
@@ -187,14 +188,9 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
                 }
             }
             if (cityName.contains("西城区")) {
-                UrbanRural urbanRural = new UrbanRural();
-                urbanRural.setPid(parentId);
-                urbanRural.setAreaCode(cityCode);
-                urbanRural.setAreaName(cityName);
-                urbanRural.setAreaCodeParent(areaCodeParent);
-                urbanRural.setAreaClass(level);
-                urbanRural.setAbbreviateEn(toCharacterInitials(cityName));
-                this.saveOrUpdate(urbanRural);
+                // 保存
+                UrbanRural urbanRural = saveOrUpdate(parentId, cityCode, cityName, areaCodeParent, toCharacterInitials(cityName), level, null);
+                // 获取下一级
                 Elements select = countyElement.select("a");
                 if (select.size() != 0) {
                     townInfo(urbanRural.getId(), urbanRural.getAreaCode(), select.last(), level + 1);
@@ -211,14 +207,9 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
         for (Element townElement : townElements) {
             String cityCode = townElement.select("td").first().text();
             String cityName = townElement.select("td").last().text();
-            UrbanRural urbanRural = new UrbanRural();
-            urbanRural.setPid(parentId);
-            urbanRural.setAreaCode(cityCode);
-            urbanRural.setAreaName(cityName);
-            urbanRural.setAreaCodeParent(areaCodeParent);
-            urbanRural.setAreaClass(level);
-            urbanRural.setAbbreviateEn(toCharacterInitials(cityName));
-            this.saveOrUpdate(urbanRural);
+            // 保存
+            UrbanRural urbanRural = saveOrUpdate(parentId, cityCode, cityName, areaCodeParent, toCharacterInitials(cityName), level, null);
+            // 获取下一级
             Elements select = townElement.select("a");
             if (select.size() != 0) {
                 villageInfo(urbanRural.getId(), urbanRural.getAreaCode(), select.last(), level + 1);
@@ -228,6 +219,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
 
     // 获取村
     private void villageInfo(Integer parentId, String areaCodeParent, Element townElement, int level) throws Exception {
+        String reg = "[^一-龥]";
         // 获取子级城市
         Document doc = connect(townElement.attr("abs:href"));
         Elements villageElements = doc.select("tr.villagetr");
@@ -238,15 +230,8 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
             if (level == 5) {
                 villageCode = villageElement.select("td").get(1).text();
             }
-            UrbanRural urbanRural = new UrbanRural();
-            urbanRural.setPid(parentId);
-            urbanRural.setAreaCode(cityCode);
-            urbanRural.setAreaName(cityName);
-            urbanRural.setAreaCodeParent(areaCodeParent);
-            urbanRural.setAreaClass(level);
-            urbanRural.setUrbanRuralClass(villageCode);
-            urbanRural.setAbbreviateEn(toCharacterInitials(cityName));
-            this.saveOrUpdate(urbanRural);
+            // 保存
+            saveOrUpdate(parentId, cityCode, cityName, areaCodeParent, toCharacterInitials(cityName.replaceAll(reg, "")), level, villageCode);
         }
     }
 
