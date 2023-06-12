@@ -16,13 +16,18 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 @Service
 public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRural> implements UrbanRuralService {
+
+    Logger logger = LoggerFactory.getLogger(getClass());
 
     private final UrbanRuralMapper urbanRuralMapper;
 
@@ -80,16 +85,16 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
      * 递归查询子城市
      */
     private List<UrbanRuralBo> selectUrbanRural(List<UrbanRuralBo> urbanRuralBoList) {
-        for (UrbanRuralBo urbanRuralBo : urbanRuralBoList) {
+        urbanRuralBoList.parallelStream().forEach(urbanRuralBo -> {
             urbanRuralBo.setUrbanRuralBos(selectUrbanRural(urbanRuralBo));
-        }
+        });
         return urbanRuralBoList;
     }
 
     // ----------------------------------------------------------------
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+//    @Transactional(rollbackFor = Exception.class)
     public Object insertUrbanRural() throws Exception {
         int level = 0;
         // 保存
@@ -106,6 +111,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
         // 先查询是否存在
         QueryWrapper<UrbanRural> urbanRuralQueryWrapper = new QueryWrapper<>();
         urbanRuralQueryWrapper.eq("area_name", areaName);
+        urbanRuralQueryWrapper.eq("area_code", areaCode);
         UrbanRural urbanRural = baseMapper.selectOne(urbanRuralQueryWrapper);
         if (null == urbanRural) {
             urbanRural = new UrbanRural();
@@ -187,7 +193,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
                     continue;
                 }
             }
-            if (cityName.contains("西城区")) {
+            if (cityName.contains("丰台区")) {
                 // 保存
                 UrbanRural urbanRural = saveOrUpdate(parentId, cityCode, cityName, areaCodeParent, toCharacterInitials(cityName), level, null);
                 // 获取下一级
