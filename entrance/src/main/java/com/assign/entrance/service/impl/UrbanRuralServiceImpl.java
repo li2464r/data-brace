@@ -105,7 +105,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
     private UrbanRural saveOrUpdate(Integer pid, String areaCode, String areaName, String areaCodeParent, String abbreviateEn, Integer areaClass, String urbanRuralClass) {
         // 先查询是否存在
         QueryWrapper<UrbanRural> urbanRuralQueryWrapper = new QueryWrapper<>();
-        urbanRuralQueryWrapper.eq("area_name", "中国");
+        urbanRuralQueryWrapper.eq("area_name", areaName);
         UrbanRural urbanRural = baseMapper.selectOne(urbanRuralQueryWrapper);
         if (null == urbanRural) {
             urbanRural = new UrbanRural();
