@@ -93,12 +93,14 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
 
     // ----------------------------------------------------------------
 
+    String reg = "[^一-龥]";
+
     @Override
 //    @Transactional(rollbackFor = Exception.class)
     public Object insertUrbanRural() throws Exception {
         int level = 0;
         // 保存
-        UrbanRural urbanRural = saveOrUpdate(0, null, "中国", null, "CHN", null, null);
+        UrbanRural urbanRural = saveOrUpdate(0, null, "中国", null, null, null);
         // 获取全国各个省级信息
         Document connect = connect("http://www.stats.gov.cn/sj/tjbz/tjyqhdmhcxhfdm/2022/");
         Elements provinceElements = connect.select("tr.provincetr");
@@ -107,12 +109,12 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
         return true;
     }
 
-    private UrbanRural saveOrUpdate(Integer pid, String areaCode, String areaName, String areaCodeParent, String abbreviateEn, Integer areaClass, String urbanRuralClass) {
+    private UrbanRural saveOrUpdate(Integer pid, String areaCode, String areaName, String areaCodeParent, Integer areaClass, String urbanRuralClass) {
         // 先查询是否存在
         QueryWrapper<UrbanRural> urbanRuralQueryWrapper = new QueryWrapper<>();
         urbanRuralQueryWrapper.eq("area_name", areaName);
         urbanRuralQueryWrapper.eq(null != areaCode, "area_code", areaCode);
-        urbanRuralQueryWrapper.eq( "normal", 1);
+        urbanRuralQueryWrapper.eq("normal", 1);
         UrbanRural urbanRural = baseMapper.selectOne(urbanRuralQueryWrapper);
         if (null == urbanRural) {
             urbanRural = new UrbanRural();
@@ -120,27 +122,26 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
             urbanRural.setAreaCode(areaCode);
             urbanRural.setAreaName(areaName);
             urbanRural.setAreaCodeParent(areaCodeParent);
-            urbanRural.setAbbreviateEn(abbreviateEn);
+            urbanRural.setAbbreviateEn(toCharacterInitials(areaName.replaceAll(reg, "")));
             urbanRural.setAreaClass(areaClass);
             urbanRural.setUrbanRuralClass(urbanRuralClass);
-//            this.saveOrUpdate(urbanRural);
+            this.saveOrUpdate(urbanRural);
         }
         return urbanRural;
     }
 
     // 获取省
     private void provinceInfo(Integer parentId, String areaCodeParent, Elements provinceElements, int level) throws Exception {
-        String reg = "[^一-龥]";
         for (Element provinceElement : provinceElements) {
             // 省
             Elements elements = provinceElement.select("a");
             for (Element element : elements) {
                 // 替换a标签
                 String provinceName = element.toString().replaceAll(reg, "");
-                if (provinceName.contains("北京")) {
+                if (provinceName.contains("河北省")) {
                     // 保存
-                    UrbanRural urbanRural = saveOrUpdate(parentId, null, provinceName, areaCodeParent, toCharacterInitials(provinceName), level, null);
-//                    cityInfo(urbanRural.getId(), urbanRural.getAreaCodeParent(), element, level + 1);
+                    UrbanRural urbanRural = saveOrUpdate(parentId, null, provinceName, areaCodeParent, level, null);
+                    cityInfo(urbanRural.getId(), urbanRural.getAreaCodeParent(), element, level + 1);
                 }
             }
         }
@@ -166,7 +167,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
                 }
             }
             // 保存
-            UrbanRural urbanRural = saveOrUpdate(parentId, cityCode, cityName, areaCodeParent, toCharacterInitials(cityName), level, null);
+            UrbanRural urbanRural = saveOrUpdate(parentId, cityCode, cityName, areaCodeParent, level, null);
             // 获取下一级
             Elements select = cityElement.select("a");
             if (select.size() != 0) {
@@ -194,9 +195,16 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
                     continue;
                 }
             }
-            if (cityName.contains("丰台区")) {
+            if (cityName.contains("平山县") ||
+                    cityName.contains("元氏县") ||
+                    cityName.contains("赵县") ||
+                    cityName.contains("石家庄高新技术产业开发区") ||
+                    cityName.contains("石家庄循环化工园区") ||
+                    cityName.contains("辛集市") ||
+                    cityName.contains("晋州市") ||
+                    cityName.contains("新乐市")) {
                 // 保存
-                UrbanRural urbanRural = saveOrUpdate(parentId, cityCode, cityName, areaCodeParent, toCharacterInitials(cityName), level, null);
+                UrbanRural urbanRural = saveOrUpdate(parentId, cityCode, cityName, areaCodeParent, level, null);
                 // 获取下一级
                 Elements select = countyElement.select("a");
                 if (select.size() != 0) {
@@ -215,7 +223,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
             String cityCode = townElement.select("td").first().text();
             String cityName = townElement.select("td").last().text();
             // 保存
-            UrbanRural urbanRural = saveOrUpdate(parentId, cityCode, cityName, areaCodeParent, toCharacterInitials(cityName), level, null);
+            UrbanRural urbanRural = saveOrUpdate(parentId, cityCode, cityName, areaCodeParent, level, null);
             // 获取下一级
             Elements select = townElement.select("a");
             if (select.size() != 0) {
@@ -226,7 +234,6 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
 
     // 获取村
     private void villageInfo(Integer parentId, String areaCodeParent, Element townElement, int level) throws Exception {
-        String reg = "[^一-龥]";
         // 获取子级城市
         Document doc = connect(townElement.attr("abs:href"));
         Elements villageElements = doc.select("tr.villagetr");
@@ -238,7 +245,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
                 villageCode = villageElement.select("td").get(1).text();
             }
             // 保存
-            saveOrUpdate(parentId, cityCode, cityName, areaCodeParent, toCharacterInitials(cityName.replaceAll(reg, "")), level, villageCode);
+            saveOrUpdate(parentId, cityCode, cityName, areaCodeParent, level, villageCode);
         }
     }
 
