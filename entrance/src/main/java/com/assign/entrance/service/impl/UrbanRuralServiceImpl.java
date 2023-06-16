@@ -46,6 +46,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
         QueryWrapper<UrbanRural> wrapper = new QueryWrapper<>();
         wrapper.eq("area_class", areaClass);
         wrapper.eq("normal", DataBraceConstant.NORMAL.NORMAL.getCode());
+        wrapper.le("area_class", DataBraceConstant.URBANRURAL_AREACLASS.COUNTY.getCode());
 
         List<UrbanRuralBo> urbanRuralBoList = BeanUtil.copyList(urbanRuralMapper.selectList(wrapper), UrbanRuralBo.class);
 
@@ -85,9 +86,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
      * 递归查询子城市
      */
     private List<UrbanRuralBo> selectUrbanRural(List<UrbanRuralBo> urbanRuralBoList) {
-        urbanRuralBoList.parallelStream().forEach(urbanRuralBo -> {
-            urbanRuralBo.setUrbanRuralBos(selectUrbanRural(urbanRuralBo));
-        });
+        urbanRuralBoList.parallelStream().forEach(urbanRuralBo -> urbanRuralBo.setUrbanRuralBos(selectUrbanRural(urbanRuralBo)));
         return urbanRuralBoList;
     }
 
@@ -166,7 +165,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
                     continue;
                 }
             }
-            if (!cityName.contains("邯郸市")) {
+            if (!cityName.contains("邢台市")) {
                 continue;
             }
             // 保存
@@ -246,7 +245,6 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
 
     private Document connect(String url) throws Exception {
         Thread.sleep(500);
-//        Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("114.102.45.178", 8089));
         return Jsoup.connect(url).timeout(30 * 1000).get();
     }
 
@@ -263,5 +261,4 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
         }
         return s.toString().toUpperCase(Locale.ROOT);
     }
-//    西苏鐣子村委会
 }
