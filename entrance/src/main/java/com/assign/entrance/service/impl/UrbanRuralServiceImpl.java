@@ -166,6 +166,9 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
                     continue;
                 }
             }
+            if (!cityName.contains("邯郸市")) {
+                continue;
+            }
             // 保存
             UrbanRural urbanRural = saveOrUpdate(parentId, cityCode, cityName, areaCodeParent, level, null);
             // 获取下一级
@@ -195,21 +198,12 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
                     continue;
                 }
             }
-            if (cityName.contains("平山县") ||
-                    cityName.contains("元氏县") ||
-                    cityName.contains("赵县") ||
-                    cityName.contains("石家庄高新技术产业开发区") ||
-                    cityName.contains("石家庄循环化工园区") ||
-                    cityName.contains("辛集市") ||
-                    cityName.contains("晋州市") ||
-                    cityName.contains("新乐市")) {
-                // 保存
-                UrbanRural urbanRural = saveOrUpdate(parentId, cityCode, cityName, areaCodeParent, level, null);
-                // 获取下一级
-                Elements select = countyElement.select("a");
-                if (select.size() != 0) {
-                    townInfo(urbanRural.getId(), urbanRural.getAreaCode(), select.last(), level + 1);
-                }
+            // 保存
+            UrbanRural urbanRural = saveOrUpdate(parentId, cityCode, cityName, areaCodeParent, level, null);
+            // 获取下一级
+            Elements select = countyElement.select("a");
+            if (select.size() != 0) {
+                townInfo(urbanRural.getId(), urbanRural.getAreaCode(), select.last(), level + 1);
             }
         }
     }
@@ -221,6 +215,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
         Elements townElements = doc.select("tr.towntr");
         for (Element townElement : townElements) {
             String cityCode = townElement.select("td").first().text();
+
             String cityName = townElement.select("td").last().text();
             // 保存
             UrbanRural urbanRural = saveOrUpdate(parentId, cityCode, cityName, areaCodeParent, level, null);
@@ -237,7 +232,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
         // 获取子级城市
         Document doc = connect(townElement.attr("abs:href"));
         Elements villageElements = doc.select("tr.villagetr");
-        for (Element villageElement : villageElements) {
+        villageElements.parallelStream().forEach(villageElement -> {
             String cityCode = villageElement.select("td").first().text();
             String cityName = villageElement.select("td").last().text();
             String villageCode = "";
@@ -246,7 +241,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
             }
             // 保存
             saveOrUpdate(parentId, cityCode, cityName, areaCodeParent, level, villageCode);
-        }
+        });
     }
 
     private Document connect(String url) throws Exception {
@@ -258,11 +253,15 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
     private String toCharacterInitials(String name) {
         StringBuilder s = new StringBuilder();
         for (char c : name.toCharArray()) {
+            if (c == '鐣') {
+                s.append("c");
+                continue;
+            }
             String[] strings = PinyinHelper.toHanyuPinyinStringArray(c);
             String substring = strings[0].substring(0, 1);
             s.append(substring);
         }
         return s.toString().toUpperCase(Locale.ROOT);
     }
-
+//    西苏鐣子村委会
 }
