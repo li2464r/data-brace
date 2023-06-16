@@ -46,7 +46,6 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
         QueryWrapper<UrbanRural> wrapper = new QueryWrapper<>();
         wrapper.eq("area_class", areaClass);
         wrapper.eq("normal", DataBraceConstant.NORMAL.NORMAL.getCode());
-        wrapper.le("area_class", DataBraceConstant.URBANRURAL_AREACLASS.COUNTY.getCode());
 
         List<UrbanRuralBo> urbanRuralBoList = BeanUtil.copyList(urbanRuralMapper.selectList(wrapper), UrbanRuralBo.class);
 
@@ -73,6 +72,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
         QueryWrapper<UrbanRural> wrapper = new QueryWrapper<>();
         wrapper.eq("pid", urbanRuralBo.getId());
         wrapper.eq("normal", DataBraceConstant.NORMAL.NORMAL.getCode());
+        wrapper.le("area_class", DataBraceConstant.URBANRURAL_AREACLASS.COUNTY.getCode());
         List<UrbanRural> urbanRuralList = urbanRuralMapper.selectList(wrapper);
         if (urbanRuralList.size() == 0) {
             return null;
