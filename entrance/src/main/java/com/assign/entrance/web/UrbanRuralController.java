@@ -44,4 +44,9 @@ public class UrbanRuralController {
         return Result.ok().data(urbanRuralService.selectLevelUrbanRural(urbanRuralDto));
     }
 
+    @RequestMapping("/insert")
+    public Result insertUrbanRural() throws Exception {
+        return Result.ok().data(urbanRuralService.insertUrbanRural());
+    }
+
 }

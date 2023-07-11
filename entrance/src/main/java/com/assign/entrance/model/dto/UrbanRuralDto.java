@@ -2,9 +2,8 @@ package com.assign.entrance.model.dto;
 
 
 import com.assign.entrance.model.bo.UrbanRuralBo;
-import com.assign.entrance.model.po.UrbanRural;
+import jakarta.validation.constraints.NotNull;
 
-import javax.validation.constraints.NotNull;
 
 public class UrbanRuralDto extends UrbanRuralBo {
 

@@ -11,13 +11,12 @@ spring:
   datasource:
     username: root
     password: Lijieqiang.0204
-    url: jdbc:mysql://www.ljq.server.com:3306/china?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true
+    url: jdbc:mysql://${remote.ip}:3306/databrace?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true
     driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
-    port: 6380
-    host: www.ljq.server.com
-    database: 1
-    password: Lijieqiang.0204
+    port: 6379
+    host: ${remote.ip}
+    database: 0
 
 mybatis-plus:
   configuration:
@@ -26,4 +25,7 @@ mybatis-plus:
     cache-enabled: true
 
 server:
-  port: 8081
+  port: 8082
+
+remote:
+  ip: dev.ikang.server.com

@@ -1,23 +1,28 @@
 package com.assign.entrance.model.po;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import org.springframework.data.redis.core.RedisHash;
 
 import java.io.Serializable;
 
 @TableName("urban_rural")
+@RedisHash
 public class UrbanRural extends Model<UrbanRural> implements Serializable {
     private static final long serialVersionUID = 5014379068811962022L;
 
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
-    private String pid;
+    private Integer pid;
     private String areaCode;
     private String areaName;
     private String areaCodeParent;
     private String abbreviateEn;
     private String abbreviateCh;
     private Integer areaClass;
-    private String urbanRuralCode;
+    private String urbanRuralClass;
     private String postalCode;
     private String createDate;
     private Integer createUser;
@@ -34,11 +39,11 @@ public class UrbanRural extends Model<UrbanRural> implements Serializable {
         this.id = id;
     }
 
-    public String getPid() {
+    public Integer getPid() {
         return pid;
     }
 
-    public void setPid(String pid) {
+    public void setPid(Integer pid) {
         this.pid = pid;
     }
 
@@ -90,12 +95,12 @@ public class UrbanRural extends Model<UrbanRural> implements Serializable {
         this.areaClass = areaClass;
     }
 
-    public String getUrbanRuralCode() {
-        return urbanRuralCode;
+    public String getUrbanRuralClass() {
+        return urbanRuralClass;
     }
 
-    public void setUrbanRuralCode(String urbanRuralCode) {
-        this.urbanRuralCode = urbanRuralCode;
+    public void setUrbanRuralClass(String urbanRuralClass) {
+        this.urbanRuralClass = urbanRuralClass;
     }
 
     public String getPostalCode() {
