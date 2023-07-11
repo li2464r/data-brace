@@ -4,6 +4,7 @@ package com.assign.entrance.service.impl;
 import com.assign.entrance.common.bean.BeanUtil;
 import com.assign.entrance.common.constants.DataBraceConstant;
 import com.assign.entrance.mapper.UrbanRuralMapper;
+import com.assign.entrance.mapper.UrbanRuralRedisMapper;
 import com.assign.entrance.model.bo.UrbanRuralBo;
 import com.assign.entrance.model.dto.UrbanRuralDto;
 import com.assign.entrance.model.po.UrbanRural;
@@ -18,6 +19,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -30,9 +32,13 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
     Logger logger = LoggerFactory.getLogger(getClass());
 
     private final UrbanRuralMapper urbanRuralMapper;
+    private final UrbanRuralRedisMapper urbanRuralRedisMapper;
+    private RedisTemplate<String, Object> redisTemplate;
 
-    public UrbanRuralServiceImpl(UrbanRuralMapper urbanRuralMapper) {
+    public UrbanRuralServiceImpl(UrbanRuralMapper urbanRuralMapper, UrbanRuralRedisMapper urbanRuralRedisMapper, RedisTemplate<String, Object> redisTemplate) {
         this.urbanRuralMapper = urbanRuralMapper;
+        this.urbanRuralRedisMapper = urbanRuralRedisMapper;
+        this.redisTemplate = redisTemplate;
     }
 
     @Override
@@ -48,9 +54,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
         wrapper.eq("normal", DataBraceConstant.NORMAL.NORMAL.getCode());
 
         List<UrbanRuralBo> urbanRuralBoList = BeanUtil.copyList(urbanRuralMapper.selectList(wrapper), UrbanRuralBo.class);
-
         List<UrbanRuralBo> urbanRuralBoList1 = selectUrbanRural(urbanRuralBoList);
-
         return BeanUtil.copyNestList(urbanRuralBoList1, UrbanRuralVo.class);
     }
 

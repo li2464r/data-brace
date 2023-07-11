@@ -1,9 +1,6 @@
 package com.assign.entrance.model.bo;
 
 import com.assign.entrance.model.po.UrbanRural;
-import com.assign.entrance.model.vo.UrbanRuralVo;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
 
 import java.io.Serializable;
 import java.util.List;
