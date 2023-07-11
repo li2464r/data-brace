@@ -42,7 +42,7 @@ public class RedisConfig {
         // 设置value的序列化方式(可自定义序列化方式)
         redisTemplate.setValueSerializer(RedisSerializer.json());
         // 设置hash类型的key序列化方式
-        // redisTemplate.setHashKeySerializer(RedisSerializer.json());
+//         redisTemplate.setHashKeySerializer(RedisSerializer.json());
         // 设置hash类型的value序列化方式
         redisTemplate.setHashValueSerializer(RedisSerializer.json());
         return redisTemplate;

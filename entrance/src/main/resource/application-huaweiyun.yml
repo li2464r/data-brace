@@ -1,8 +1,6 @@
 spring:
   application:
     name: data-brace
-  profiles:
-    active: huaweiyun
   autoconfigure:
     #排除自动配置的类
     exclude:
@@ -15,10 +13,12 @@ spring:
     password: Lijieqiang@0204
     url: jdbc:mysql://${remote.ip}:3306/databrace?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true
     driver-class-name: com.mysql.cj.jdbc.Driver
-  redis:
-    port: 6379
-    host: ${remote.ip}
-    database: 0
+  data:
+    redis:
+      database: 0
+      port: 6380
+      host: ${remote.ip}
+      password: Lijieqiang@0204
 
 mybatis-plus:
   configuration:

@@ -1,5 +1,7 @@
 package com.assign.entrance.base.redis.serializer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.SerializationException;
 import org.springframework.util.Assert;
@@ -9,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
 public class CustomRedisSerializer implements RedisSerializer<String> {
-
+    Logger logger = LoggerFactory.getLogger(getClass());
     private final Charset charset;
     private final String prefix;
 
