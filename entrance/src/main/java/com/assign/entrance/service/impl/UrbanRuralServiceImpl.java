@@ -163,7 +163,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
                     continue;
                 }
             }
-            if (!cityName.contains("邢台市")) {
+            if (!cityName.contains("张家口市")) {
                 continue;
             }
             // 保存

@@ -1,6 +1,5 @@
 package com.assign.entrance.model.vo;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
@@ -17,7 +16,7 @@ public class UrbanRuralVo implements Serializable {
     private String abbreviateEn;
     private String abbreviateCh;
     private Integer areaClass;
-    private String urbanRuralCode;
+    private String urbanRuralClass;
     private String postalCode;
     private Integer normal;
     @JsonProperty("urbanRuralBos")
@@ -87,12 +86,12 @@ public class UrbanRuralVo implements Serializable {
         this.areaClass = areaClass;
     }
 
-    public String getUrbanRuralCode() {
-        return urbanRuralCode;
+    public String getUrbanRuralClass() {
+        return urbanRuralClass;
     }
 
-    public void setUrbanRuralCode(String urbanRuralCode) {
-        this.urbanRuralCode = urbanRuralCode;
+    public void setUrbanRuralClass(String urbanRuralClass) {
+        this.urbanRuralClass = urbanRuralClass;
     }
 
     public String getPostalCode() {
