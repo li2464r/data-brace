@@ -37,25 +37,25 @@ public class MybatisRedisCache implements Cache {
 
     @Override
     public void putObject(Object key, Object value) {
-        logger.info("RedisCache.putObject: id:{}", id);
+        // logger.info("RedisCache.putObject: id:{}", id);
         redisTemplate.boundHashOps(id).put(key, value);
     }
 
     @Override
     public Object getObject(Object key) {
-        logger.info("RedisCache.getObject: id:{}", id);
+        // logger.info("RedisCache.getObject: id:{}", id);
         return redisTemplate.boundHashOps(id).get(key);
     }
 
     @Override
     public Object removeObject(Object key) {
-        logger.info("RedisCache.removeObject: id:{}", id);
+        // logger.info("RedisCache.removeObject: id:{}", id);
         return redisTemplate.boundHashOps(id).delete(key);
     }
 
     @Override
     public void clear() {
-        logger.info("RedisCache.clear: id:{}", id);
+        // logger.info("RedisCache.clear: id:{}", id);
         redisTemplate.delete(id);
     }
 

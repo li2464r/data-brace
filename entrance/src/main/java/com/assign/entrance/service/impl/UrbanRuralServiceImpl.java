@@ -94,7 +94,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
 
     @Override
 //    @Transactional(rollbackFor = Exception.class)
-    public Object insertUrbanRural() throws Exception {
+    public Object insertUrbanRural() {
         int level = 0;
         // 保存
         UrbanRural urbanRural = saveOrUpdate(0, null, "中国", null, null, null);
@@ -103,6 +103,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
         Elements provinceElements = connect.select("tr.provincetr");
         // 获取省
         provinceInfo(urbanRural.getId(), urbanRural.getAreaCode(), provinceElements, level + 1);
+        logger.info("END");
         return true;
     }
 
@@ -128,14 +129,14 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
     }
 
     // 获取省
-    private void provinceInfo(Integer parentId, String areaCodeParent, Elements provinceElements, int level) throws Exception {
+    private void provinceInfo(Integer parentId, String areaCodeParent, Elements provinceElements, int level) {
         for (Element provinceElement : provinceElements) {
             // 省
             Elements elements = provinceElement.select("a");
             for (Element element : elements) {
                 // 替换a标签
                 String provinceName = element.toString().replaceAll(reg, "");
-                if (provinceName.contains("河北省")) {
+                if (provinceName.contains("黑龙江省")) {
                     // 保存
                     UrbanRural urbanRural = saveOrUpdate(parentId, null, provinceName, areaCodeParent, level, null);
                     cityInfo(urbanRural.getId(), urbanRural.getAreaCodeParent(), element, level + 1);
@@ -145,7 +146,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
     }
 
     // 获取市
-    private void cityInfo(Integer parentId, String areaCodeParent, Element provinceElement, int level) throws Exception {
+    private void cityInfo(Integer parentId, String areaCodeParent, Element provinceElement, int level) {
         // 获取子级城市
         Document doc = connect(provinceElement.attr("abs:href"));
         Elements cityElements = doc.select("tr.citytr");
@@ -163,12 +164,14 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
                     continue;
                 }
             }
-            if (!cityName.contains("张家口市")) {
-                continue;
-            }
+            // if (!cityName.contains("哈尔滨市")) {
+            //     continue;
+            // }
+            logger.info("{}", cityName);
             // 保存
             UrbanRural urbanRural = saveOrUpdate(parentId, cityCode, cityName, areaCodeParent, level, null);
             // 获取下一级
+
             Elements select = cityElement.select("a");
             if (select.size() != 0) {
                 countyInfo(urbanRural.getId(), urbanRural.getAreaCode(), select.last(), level + 1);
@@ -177,7 +180,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
     }
 
     // 获取县
-    private void countyInfo(Integer parentId, String areaCodeParent, Element cityElement, int level) throws Exception {
+    private void countyInfo(Integer parentId, String areaCodeParent, Element cityElement, int level) {
         // 获取子级城市
         Document doc = connect(cityElement.attr("abs:href"));
         Elements countyElements = doc.select("tr.countytr");
@@ -195,6 +198,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
                     continue;
                 }
             }
+            logger.info("{}", cityName);
             // 保存
             UrbanRural urbanRural = saveOrUpdate(parentId, cityCode, cityName, areaCodeParent, level, null);
             // 获取下一级
@@ -206,13 +210,12 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
     }
 
     // 获取镇
-    private void townInfo(Integer parentId, String areaCodeParent, Element countyElement, int level) throws Exception {
+    private void townInfo(Integer parentId, String areaCodeParent, Element countyElement, int level) {
         // 获取子级城市
         Document doc = connect(countyElement.attr("abs:href"));
         Elements townElements = doc.select("tr.towntr");
         for (Element townElement : townElements) {
             String cityCode = townElement.select("td").first().text();
-
             String cityName = townElement.select("td").last().text();
             // 保存
             UrbanRural urbanRural = saveOrUpdate(parentId, cityCode, cityName, areaCodeParent, level, null);
@@ -225,7 +228,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
     }
 
     // 获取村
-    private void villageInfo(Integer parentId, String areaCodeParent, Element townElement, int level) throws Exception {
+    private void villageInfo(Integer parentId, String areaCodeParent, Element townElement, int level) {
         // 获取子级城市
         Document doc = connect(townElement.attr("abs:href"));
         Elements villageElements = doc.select("tr.villagetr");
@@ -241,9 +244,30 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
         });
     }
 
-    private Document connect(String url) throws Exception {
-        Thread.sleep(500);
-        return Jsoup.connect(url).timeout(30 * 1000).get();
+    static int num = 0;
+
+    private Document connect(String url) {
+        Document document = null;
+        try {
+            Thread.sleep(500);
+            document = Jsoup.connect(url).timeout(30 * 1000).get();
+        } catch (Exception e) {
+            logger.error("Error connecting {}", url);
+            if (num >= 3) {
+                throw new RuntimeException("Error connecting " + url);
+            }
+        }
+        if (null == document) {
+            num++;
+            try {
+                Thread.sleep(num * 1000L);
+            } catch (InterruptedException e) {
+                logger.error("Error", e);
+            }
+            connect(url);
+        }
+        num = 0;
+        return document;
     }
 
     private String toCharacterInitials(String name) {
@@ -251,6 +275,14 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
         for (char c : name.toCharArray()) {
             if (c == '鐣') {
                 s.append("c");
+                continue;
+            }
+            if (c == '軨') {
+                s.append("l");
+                continue;
+            }
+            if (c == '栆') {
+                s.append("z");
                 continue;
             }
             String[] strings = PinyinHelper.toHanyuPinyinStringArray(c);
