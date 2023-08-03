@@ -124,6 +124,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
             urbanRural.setAreaClass(areaClass);
             urbanRural.setUrbanRuralClass(urbanRuralClass);
             this.saveOrUpdate(urbanRural);
+            logger.info("{}", areaName);
         }
         return urbanRural;
     }
@@ -136,8 +137,39 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
             for (Element element : elements) {
                 // 替换a标签
                 String provinceName = element.toString().replaceAll(reg, "");
-                if (provinceName.contains("黑龙江省")) {
-                    // 保存
+                List<String> list = new ArrayList<>();
+                // list.add("北京市");
+                // list.add("天津市");
+                // list.add("河北省");
+                // list.add("山西省");
+                // list.add("内蒙古自治区");
+                // list.add("辽宁省");
+                // list.add("吉林省");
+                // list.add("黑龙江省");
+                // list.add("上海市");
+                // list.add("江苏省");
+                // list.add("浙江省");
+                list.add("安徽省");
+                // list.add("福建省");
+                // list.add("江西省");
+                // list.add("山东省");
+                // list.add("河南省");
+                // list.add("湖北省");
+                // list.add("湖南省");
+                // list.add("广东省");
+                // list.add("广西壮族自治区");
+                // list.add("海南省");
+                // list.add("重庆市");
+                // list.add("四川省");
+                // list.add("贵州省");
+                // list.add("云南省");
+                // list.add("西藏自治区");
+                // list.add("陕西省");
+                // list.add("甘肃省");
+                // list.add("青海省");
+                // list.add("宁夏回族自治区");
+                // list.add("新疆维吾尔自治区");
+                if (list.contains(provinceName)) {
                     UrbanRural urbanRural = saveOrUpdate(parentId, null, provinceName, areaCodeParent, level, null);
                     cityInfo(urbanRural.getId(), urbanRural.getAreaCodeParent(), element, level + 1);
                 }
@@ -164,14 +196,14 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
                     continue;
                 }
             }
-            // if (!cityName.contains("哈尔滨市")) {
+            // List<String> list = new ArrayList<>();
+            // list.add("双鸭山市");
+            // if (!list.contains(cityName)) {
             //     continue;
             // }
-            logger.info("{}", cityName);
             // 保存
             UrbanRural urbanRural = saveOrUpdate(parentId, cityCode, cityName, areaCodeParent, level, null);
             // 获取下一级
-
             Elements select = cityElement.select("a");
             if (select.size() != 0) {
                 countyInfo(urbanRural.getId(), urbanRural.getAreaCode(), select.last(), level + 1);
@@ -198,7 +230,6 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
                     continue;
                 }
             }
-            logger.info("{}", cityName);
             // 保存
             UrbanRural urbanRural = saveOrUpdate(parentId, cityCode, cityName, areaCodeParent, level, null);
             // 获取下一级
@@ -214,7 +245,8 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
         // 获取子级城市
         Document doc = connect(countyElement.attr("abs:href"));
         Elements townElements = doc.select("tr.towntr");
-        for (Element townElement : townElements) {
+
+        townElements.parallelStream().forEach(townElement -> {
             String cityCode = townElement.select("td").first().text();
             String cityName = townElement.select("td").last().text();
             // 保存
@@ -224,7 +256,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
             if (select.size() != 0) {
                 villageInfo(urbanRural.getId(), urbanRural.getAreaCode(), select.last(), level + 1);
             }
-        }
+        });
     }
 
     // 获取村
