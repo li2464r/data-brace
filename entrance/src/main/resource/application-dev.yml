@@ -13,10 +13,11 @@ spring:
     password: Lijieqiang.0204
     url: jdbc:mysql://${remote.ip}:3306/databrace?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true
     driver-class-name: com.mysql.cj.jdbc.Driver
-  redis:
-    port: 6379
-    host: ${remote.ip}
-    database: 0
+  data:
+    redis:
+      port: 6379
+      host: ${remote.ip}
+      database: 0
 
 mybatis-plus:
   configuration:
