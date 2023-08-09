@@ -115,6 +115,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
         urbanRuralQueryWrapper.eq("normal", 1);
         UrbanRural urbanRural = baseMapper.selectOne(urbanRuralQueryWrapper);
         if (null == urbanRural) {
+            logger.info("{}", areaName);
             urbanRural = new UrbanRural();
             urbanRural.setPid(pid);
             urbanRural.setAreaCode(areaCode);
@@ -124,7 +125,6 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
             urbanRural.setAreaClass(areaClass);
             urbanRural.setUrbanRuralClass(urbanRuralClass);
             this.saveOrUpdate(urbanRural);
-            logger.info("{}", areaName);
         }
         return urbanRural;
     }
@@ -149,8 +149,8 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
                 // list.add("上海市");
                 // list.add("江苏省");
                 // list.add("浙江省");
-                list.add("安徽省");
-                // list.add("福建省");
+                // list.add("安徽省");
+                list.add("福建省");
                 // list.add("江西省");
                 // list.add("山东省");
                 // list.add("河南省");
@@ -197,7 +197,12 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
                 }
             }
             // List<String> list = new ArrayList<>();
-            // list.add("双鸭山市");
+            // list.add("阜阳市");
+            // list.add("宿州市");
+            // list.add("六安市");
+            // list.add("亳州市");
+            // list.add("池州市");
+            // list.add("宣城市");
             // if (!list.contains(cityName)) {
             //     continue;
             // }
@@ -282,7 +287,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
         Document document = null;
         try {
             Thread.sleep(500);
-            document = Jsoup.connect(url).timeout(30 * 1000).get();
+            document = Jsoup.connect(url).timeout(5 * 60 * 1000).get();
         } catch (Exception e) {
             logger.error("Error connecting {}", url);
             if (num >= 3) {
@@ -292,7 +297,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
         if (null == document) {
             num++;
             try {
-                Thread.sleep(num * 1000L);
+                Thread.sleep(num * 5 * 1000L);
             } catch (InterruptedException e) {
                 logger.error("Error", e);
             }
@@ -313,7 +318,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
                 s.append("l");
                 continue;
             }
-            if (c == '栆') {
+            if (c == '栆' || c == '庒') {
                 s.append("z");
                 continue;
             }
