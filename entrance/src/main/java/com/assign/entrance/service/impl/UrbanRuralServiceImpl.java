@@ -150,9 +150,9 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
                 // list.add("江苏省");
                 // list.add("浙江省");
                 // list.add("安徽省");
-                list.add("福建省");
+                // list.add("福建省");
                 // list.add("江西省");
-                // list.add("山东省");
+                list.add("山东省");
                 // list.add("河南省");
                 // list.add("湖北省");
                 // list.add("湖南省");
@@ -197,12 +197,10 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
                 }
             }
             // List<String> list = new ArrayList<>();
-            // list.add("阜阳市");
-            // list.add("宿州市");
-            // list.add("六安市");
-            // list.add("亳州市");
-            // list.add("池州市");
-            // list.add("宣城市");
+            // list.add("漳州市");
+            // list.add("南平市");
+            // list.add("龙岩市");
+            // list.add("宁德市");
             // if (!list.contains(cityName)) {
             //     continue;
             // }
@@ -312,6 +310,10 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
         for (char c : name.toCharArray()) {
             if (c == '鐣') {
                 s.append("c");
+                continue;
+            }
+            if (c == '畓') {
+                s.append("d");
                 continue;
             }
             if (c == '軨') {
