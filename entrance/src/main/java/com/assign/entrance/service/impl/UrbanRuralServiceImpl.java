@@ -99,7 +99,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
         // 保存
         UrbanRural urbanRural = saveOrUpdate(0, null, "中国", null, null, null);
         // 获取全国各个省级信息
-        Document connect = connect("http://www.stats.gov.cn/sj/tjbz/tjyqhdmhcxhfdm/2022/");
+        Document connect = connect("http://www.stats.gov.cn/ch/sj/tjbz/tjyqhdmhcxhfdm/2022/");
         Elements provinceElements = connect.select("tr.provincetr");
         // 获取省
         provinceInfo(urbanRural.getId(), urbanRural.getAreaCode(), provinceElements, level + 1);
