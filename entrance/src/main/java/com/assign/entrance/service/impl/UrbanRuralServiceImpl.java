@@ -72,7 +72,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
         wrapper.eq("normal", DataBraceConstant.NORMAL.NORMAL.getCode());
         wrapper.le("area_class", DataBraceConstant.URBANRURAL_AREACLASS.COUNTY.getCode());
         List<UrbanRural> urbanRuralList = urbanRuralMapper.selectList(wrapper);
-        if (urbanRuralList.size() == 0) {
+        if (urbanRuralList.isEmpty()) {
             return null;
         }
         List<UrbanRuralBo> urbanRuralBoList = BeanUtil.copyList(urbanRuralList, UrbanRuralBo.class);

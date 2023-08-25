@@ -28,6 +28,3 @@ mybatis-plus:
 
 server:
   port: 8082
-
-remote:
-  ip: huaweiyun.server.com
