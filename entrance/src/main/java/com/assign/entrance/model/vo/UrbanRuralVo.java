@@ -2,10 +2,12 @@ package com.assign.entrance.model.vo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
 public class UrbanRuralVo implements Serializable {
+    @Serial
     private static final long serialVersionUID = 5014379068811962022L;
 
     private Integer id;

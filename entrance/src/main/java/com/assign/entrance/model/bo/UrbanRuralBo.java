@@ -2,10 +2,12 @@ package com.assign.entrance.model.bo;
 
 import com.assign.entrance.model.po.UrbanRural;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
 public class UrbanRuralBo extends UrbanRural implements Serializable {
+    @Serial
     private static final long serialVersionUID = 5014379068811962022L;
 
     private List<UrbanRuralBo> urbanRuralBos;
