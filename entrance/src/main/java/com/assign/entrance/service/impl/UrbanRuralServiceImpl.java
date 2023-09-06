@@ -93,7 +93,6 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
     String reg = "[^一-龥]";
 
     @Override
-//    @Transactional(rollbackFor = Exception.class)
     public Object insertUrbanRural() {
         int level = 0;
         // 保存
