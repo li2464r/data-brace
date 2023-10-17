@@ -306,3 +306,4 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
         return s.toString().toUpperCase(Locale.ROOT);
     }
 }
+// ssh-keygen -t rsa -C 'li2464r@163.com'
