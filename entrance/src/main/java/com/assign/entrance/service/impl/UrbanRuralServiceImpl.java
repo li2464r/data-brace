@@ -136,44 +136,27 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
             for (Element element : elements) {
                 // 替换a标签
                 String provinceName = element.toString().replaceAll(reg, "");
-                List<String> list = new ArrayList<>();
-                // list.add("北京市");
-                // list.add("天津市");
-                // list.add("河北省");
-                // list.add("山西省");
-                // list.add("内蒙古自治区");
-                // list.add("辽宁省");
-                // list.add("吉林省");
-                // list.add("黑龙江省");
-                // list.add("上海市");
-                // list.add("江苏省");
-                // list.add("浙江省");
-                // list.add("安徽省");
-                // list.add("福建省");
-                // list.add("江西省");
-                list.add("山东省");
-                // list.add("河南省");
-                // list.add("湖北省");
-                // list.add("湖南省");
-                // list.add("广东省");
-                // list.add("广西壮族自治区");
-                // list.add("海南省");
-                // list.add("重庆市");
-                // list.add("四川省");
-                // list.add("贵州省");
-                // list.add("云南省");
-                // list.add("西藏自治区");
-                // list.add("陕西省");
-                // list.add("甘肃省");
-                // list.add("青海省");
-                // list.add("宁夏回族自治区");
-                // list.add("新疆维吾尔自治区");
+                // 获取城市列表
+                List<String> list = getCityList();
                 if (list.contains(provinceName)) {
                     UrbanRural urbanRural = saveOrUpdate(parentId, null, provinceName, areaCodeParent, level, null);
                     cityInfo(urbanRural.getId(), urbanRural.getAreaCodeParent(), element, level + 1);
                 }
             }
         }
+    }
+
+    /**
+     * 北京市 天津市 河北省 山西省 内蒙古自治区 辽宁省 吉林省 黑龙江省 上海市 江苏省 浙江省 安徽省 福建省 江西省
+     * TODO 山东省
+     * 河南省 湖北省 湖南省 广东省 广西壮族自治区 海南省 重庆市 四川省 贵州省 云南省 西藏自治区 陕西省 甘肃省 青海省 宁夏回族自治区 新疆维吾尔自治区
+     *
+     * @return 城市列表
+     */
+    private static List<String> getCityList() {
+        List<String> list = new ArrayList<>();
+        list.add("山东省");
+        return list;
     }
 
     // 获取市
@@ -195,14 +178,6 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
                     continue;
                 }
             }
-            // List<String> list = new ArrayList<>();
-            // list.add("漳州市");
-            // list.add("南平市");
-            // list.add("龙岩市");
-            // list.add("宁德市");
-            // if (!list.contains(cityName)) {
-            //     continue;
-            // }
             // 保存
             UrbanRural urbanRural = saveOrUpdate(parentId, cityCode, cityName, areaCodeParent, level, null);
             // 获取下一级
