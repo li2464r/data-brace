@@ -1,5 +1,6 @@
 package com.assign.entrance.base.result;
 
+import java.io.Serial;
 import java.util.HashMap;
 
 /**
@@ -9,6 +10,7 @@ import java.util.HashMap;
  */
 public final class Result extends HashMap<String, Object> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**

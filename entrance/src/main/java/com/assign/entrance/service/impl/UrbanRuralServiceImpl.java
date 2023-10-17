@@ -207,7 +207,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
             UrbanRural urbanRural = saveOrUpdate(parentId, cityCode, cityName, areaCodeParent, level, null);
             // 获取下一级
             Elements select = cityElement.select("a");
-            if (select.size() != 0) {
+            if (!select.isEmpty()) {
                 countyInfo(urbanRural.getId(), urbanRural.getAreaCode(), select.last(), level + 1);
             }
         }
@@ -236,7 +236,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
             UrbanRural urbanRural = saveOrUpdate(parentId, cityCode, cityName, areaCodeParent, level, null);
             // 获取下一级
             Elements select = countyElement.select("a");
-            if (select.size() != 0) {
+            if (!select.isEmpty()) {
                 townInfo(urbanRural.getId(), urbanRural.getAreaCode(), select.last(), level + 1);
             }
         }
@@ -255,7 +255,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
             UrbanRural urbanRural = saveOrUpdate(parentId, cityCode, cityName, areaCodeParent, level, null);
             // 获取下一级
             Elements select = townElement.select("a");
-            if (select.size() != 0) {
+            if (!select.isEmpty()) {
                 villageInfo(urbanRural.getId(), urbanRural.getAreaCode(), select.last(), level + 1);
             }
         });

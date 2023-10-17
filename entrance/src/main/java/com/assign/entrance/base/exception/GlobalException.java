@@ -14,7 +14,13 @@ public class GlobalException {
     @ExceptionHandler(value = Exception.class)
     public Result doHandlerRuntimeException(Exception e) {
         logger.error("处理异常:", e);
-        return Result.fail("处理异常");
+        return Result.fail(e.getMessage());
+    }
+
+    @ExceptionHandler(value = Exception.class)
+    public Result doHandlerLibertyException(LibertyException libertyException) {
+        logger.error(libertyException.getMessage() + ": ", libertyException);
+        return Result.fail(libertyException.getMessage());
     }
 
 }

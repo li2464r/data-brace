@@ -1,6 +1,7 @@
 package com.assign.entrance.base;
 
 
+import com.assign.entrance.base.exception.LibertyException;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -12,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-
 
 import java.util.List;
 
@@ -29,17 +29,17 @@ abstract public class BaseController {
      * @param entity 泛型类
      * @return {@link Page<T>}
      */
-    public <T> Page<T> startPage(Class<T> entity) {
+    public <T> Page<T> startPage(Class<T> entity) throws LibertyException {
 
         HttpServletRequest request = getRequest();
-        //每页多少行
+        // 每页多少行
         String pageSize = request.getParameter("size");
-        //当前页数
+        // 当前页数
         String currentPage = request.getParameter("current");
-        //排序字段 eg: [{"column":"age","asc":true}]
+        // 排序字段 eg: [{"column":"age","asc":true}]
         String orders = request.getParameter("orders");
 
-        //设置默认值
+        // 设置默认值
         if (Strings.isBlank(currentPage)) {
             currentPage = "1";
         }
@@ -51,15 +51,16 @@ abstract public class BaseController {
 
         if (Strings.isNotBlank(orders)) {
 
-            //字符串转List<OrderItem> 对象
+            // 字符串转List<OrderItem> 对象
             ObjectMapper objectMapper = new ObjectMapper();
             JavaType javaType = objectMapper.getTypeFactory().constructParametricType(List.class, OrderItem.class);
             try {
                 List<OrderItem> ordersList = objectMapper.readValue(orders, javaType);
-                //设置
+                // 设置
                 page.setOrders(ordersList);
             } catch (JsonProcessingException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
+                throw new LibertyException("获取排序参数失败");
             }
 
         }
@@ -70,11 +71,11 @@ abstract public class BaseController {
     /**
      * 获取request
      */
-    protected HttpServletRequest getRequest() {
+    protected HttpServletRequest getRequest() throws LibertyException {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (attributes == null) {
             logger.error("获取 ServletRequestAttributes 异常");
-            return null;
+            throw new LibertyException("获取排序参数失败");
         }
         return attributes.getRequest();
     }
