@@ -23,6 +23,7 @@ import org.tool.bean.BeanUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 @Service
 public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRural> implements UrbanRuralService {
@@ -165,8 +166,8 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
         Document doc = connect(provinceElement.attr("abs:href"));
         Elements cityElements = doc.select("tr.citytr");
         for (Element cityElement : cityElements) {
-            String cityCode = cityElement.select("td").first().text();
-            String cityName = cityElement.select("td").last().text();
+            String cityCode = Objects.requireNonNull(cityElement.select("td").first()).text();
+            String cityName = Objects.requireNonNull(cityElement.select("td").last()).text();
             if (cityName.contains("市辖区")) {
                 ArrayList<String> arrayList = new ArrayList<>();
                 arrayList.add("110100000000");
@@ -183,7 +184,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
             // 获取下一级
             Elements select = cityElement.select("a");
             if (!select.isEmpty()) {
-                countyInfo(urbanRural.getId(), urbanRural.getAreaCode(), select.last(), level + 1);
+                countyInfo(urbanRural.getId(), urbanRural.getAreaCode(), Objects.requireNonNull(select.last()), level + 1);
             }
         }
     }
@@ -194,8 +195,8 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
         Document doc = connect(cityElement.attr("abs:href"));
         Elements countyElements = doc.select("tr.countytr");
         for (Element countyElement : countyElements) {
-            String cityCode = countyElement.select("td").first().text();
-            String cityName = countyElement.select("td").last().text();
+            String cityCode = Objects.requireNonNull(countyElement.select("td").first()).text();
+            String cityName = Objects.requireNonNull(countyElement.select("td").last()).text();
             if (cityName.contains("市辖区")) {
                 ArrayList<String> arrayList = new ArrayList<>();
                 arrayList.add("110100000000");
@@ -212,7 +213,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
             // 获取下一级
             Elements select = countyElement.select("a");
             if (!select.isEmpty()) {
-                townInfo(urbanRural.getId(), urbanRural.getAreaCode(), select.last(), level + 1);
+                townInfo(urbanRural.getId(), urbanRural.getAreaCode(), Objects.requireNonNull(select.last()), level + 1);
             }
         }
     }
@@ -224,14 +225,14 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
         Elements townElements = doc.select("tr.towntr");
 
         townElements.parallelStream().forEach(townElement -> {
-            String cityCode = townElement.select("td").first().text();
-            String cityName = townElement.select("td").last().text();
+            String cityCode = Objects.requireNonNull(townElement.select("td").first()).text();
+            String cityName = Objects.requireNonNull(townElement.select("td").last()).text();
             // 保存
             UrbanRural urbanRural = saveOrUpdate(parentId, cityCode, cityName, areaCodeParent, level, null);
             // 获取下一级
             Elements select = townElement.select("a");
             if (!select.isEmpty()) {
-                villageInfo(urbanRural.getId(), urbanRural.getAreaCode(), select.last(), level + 1);
+                villageInfo(urbanRural.getId(), urbanRural.getAreaCode(), Objects.requireNonNull(select.last()), level + 1);
             }
         });
     }
@@ -242,8 +243,8 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
         Document doc = connect(townElement.attr("abs:href"));
         Elements villageElements = doc.select("tr.villagetr");
         villageElements.parallelStream().forEach(villageElement -> {
-            String cityCode = villageElement.select("td").first().text();
-            String cityName = villageElement.select("td").last().text();
+            String cityCode = Objects.requireNonNull(villageElement.select("td").first()).text();
+            String cityName = Objects.requireNonNull(villageElement.select("td").last()).text();
             String villageCode = "";
             if (level == 5) {
                 villageCode = villageElement.select("td").get(1).text();
