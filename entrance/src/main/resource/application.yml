@@ -11,13 +11,13 @@ spring:
   datasource:
     username: root
     password: Lijieqiang@0204
-    url: jdbc:mysql://${remote.ip}:3306/databrace?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true
+    url: jdbc:mysql://${remote.mysql.ip}:${remote.mysql.port}/databrace?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true
     driver-class-name: com.mysql.cj.jdbc.Driver
   data:
     redis:
+      port: ${remote.redis.port}
+      host: ${remote.redis.ip}
       database: 0
-      port: 6380
-      host: ${remote.ip}
       password: Lijieqiang@0204
 
 mybatis-plus:
@@ -28,3 +28,16 @@ mybatis-plus:
 
 server:
   port: 8082
+
+remote:
+  mysql:
+    ip: huaweiyun.server.com
+    port: 3306
+  redis:
+    ip: huaweiyun.server.com
+    port: 6380
+  urbanrural:
+    ip: huaweiyun.server.com
+  rocket-mq:
+    ip: dev.ikang.server.com
+    port: 9876
