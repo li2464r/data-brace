@@ -1,12 +1,13 @@
 package com.assign.entrance.web;
 
 
-import com.assign.entrance.base.result.Result;
+import com.assign.entrance.base.exception.LibertyException;
 import com.assign.entrance.model.dto.UrbanRuralDto;
 import com.assign.entrance.service.UrbanRuralService;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.tool.result.Result;
 
 @RestController
 @RequestMapping("/urban/rural")
@@ -27,7 +28,7 @@ public class UrbanRuralController {
      * @date 2022/8/5 0005 10:29
      */
     @RequestMapping("/list/child")
-    public Result selectChildUrbanRural(@RequestBody(required = false) UrbanRuralDto urbanRuralDto) {
+    public Result selectChildUrbanRural(@RequestBody(required = false) UrbanRuralDto urbanRuralDto) throws LibertyException {
         return Result.ok().data(urbanRuralService.selectChildUrbanRural(urbanRuralDto));
     }
 

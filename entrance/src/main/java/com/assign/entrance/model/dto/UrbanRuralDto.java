@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 public class UrbanRuralDto extends UrbanRuralBo {
 
     @NotNull
+    private Integer id;
     private Integer areaClass;
 
 }

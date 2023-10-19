@@ -22,12 +22,12 @@ spring:
 
 mybatis-plus:
   configuration:
-#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
     cache-enabled: true
 
 server:
-  port: 8082
+  port: 8083
 
 remote:
   mysql:
@@ -36,8 +36,3 @@ remote:
   redis:
     ip: huaweiyun.server.com
     port: 6380
-  urbanrural:
-    ip: huaweiyun.server.com
-  rocket-mq:
-    ip: dev.ikang.server.com
-    port: 9876

@@ -1,6 +1,7 @@
 package com.assign.entrance.service.impl;
 
 
+import com.assign.entrance.base.exception.LibertyException;
 import com.assign.entrance.common.constants.DataBraceConstant;
 import com.assign.entrance.mapper.UrbanRuralMapper;
 import com.assign.entrance.model.bo.UrbanRuralBo;
@@ -37,18 +38,18 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
     }
 
     @Override
-    public List<UrbanRuralVo> selectChildUrbanRural(UrbanRuralDto urbanRuralDto) {
+    public List<UrbanRuralVo> selectChildUrbanRural(UrbanRuralDto urbanRuralDto) throws LibertyException {
         // 默认查询第一级
-        int areaClass = DataBraceConstant.URBANRURAL_AREACLASS.COUNTRY.code;
-        if (null != urbanRuralDto && null != urbanRuralDto.getAreaClass()) {
-            areaClass = urbanRuralDto.getAreaClass();
+        if (null == urbanRuralDto.getId()) {
+            throw new LibertyException("ID不能为空");
         }
         // 查询条件
         QueryWrapper<UrbanRural> wrapper = new QueryWrapper<>();
-        wrapper.eq("area_class", areaClass);
         wrapper.eq("normal", DataBraceConstant.NORMAL.NORMAL.getCode());
-
+        wrapper.setEntity(urbanRuralDto);
+        // 查询第一级城市
         List<UrbanRuralBo> urbanRuralBoList = BeanUtil.copyList(urbanRuralMapper.selectList(wrapper), UrbanRuralBo.class);
+        // 递归查询下级城市
         List<UrbanRuralBo> urbanRuralBoList1 = selectUrbanRural(urbanRuralBoList);
         return BeanUtil.copyNestList(urbanRuralBoList1, UrbanRuralVo.class);
     }
@@ -56,10 +57,14 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
     @Override
     public List<UrbanRuralVo> selectLevelUrbanRural(UrbanRuralDto urbanRuralDto) {
         QueryWrapper<UrbanRural> wrapper = new QueryWrapper<>();
-        wrapper.eq("area_class", urbanRuralDto.getAreaClass());
+        // wrapper.eq("area_class", urbanRuralDto.getAreaClass());
         wrapper.eq("normal", DataBraceConstant.NORMAL.NORMAL.getCode());
+        wrapper.setEntity(urbanRuralDto);
+
         return BeanUtil.copyList(urbanRuralMapper.selectList(wrapper), UrbanRuralVo.class);
     }
+
+    // ----------------------------------------------------------------
 
     /**
      * 递归查询子城市

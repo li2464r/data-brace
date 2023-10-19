@@ -1,6 +1,7 @@
 package com.assign.entrance.service;
 
 
+import com.assign.entrance.base.exception.LibertyException;
 import com.assign.entrance.model.dto.UrbanRuralDto;
 import com.assign.entrance.model.po.UrbanRural;
 import com.assign.entrance.model.vo.UrbanRuralVo;
@@ -16,7 +17,7 @@ public interface UrbanRuralService extends IService<UrbanRural> {
      * @param urbanRuralDto {@link UrbanRuralDto}
      * @return {@link List<UrbanRuralVo>}
      */
-    List<UrbanRuralVo> selectChildUrbanRural(UrbanRuralDto urbanRuralDto);
+    List<UrbanRuralVo> selectChildUrbanRural(UrbanRuralDto urbanRuralDto) throws LibertyException;
 
     /**
      * 查询所有的层级城市
