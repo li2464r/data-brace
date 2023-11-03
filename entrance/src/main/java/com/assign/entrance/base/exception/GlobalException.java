@@ -19,7 +19,7 @@ public class GlobalException {
 
     @ExceptionHandler(value = LibertyException.class)
     public Result doHandlerLibertyException(LibertyException libertyException) {
-        logger.error(libertyException.getMessage() + ": ", libertyException);
+        logger.error("{}", libertyException.getMessage(), libertyException);
         return Result.fail(libertyException.getMessage());
     }
 

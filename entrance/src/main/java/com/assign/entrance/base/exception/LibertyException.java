@@ -2,6 +2,12 @@ package com.assign.entrance.base.exception;
 
 import java.io.Serializable;
 
+/**
+ * 自定义处理异常
+ *
+ * @author <a href="mailto:li2464r@163.com">R</a>
+ * @date 2023/10/19 019 下午 02:40
+ */
 public class LibertyException extends Exception implements Serializable {
 
     @java.io.Serial
