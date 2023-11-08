@@ -56,7 +56,7 @@ abstract public class BaseController {
             JavaType javaType = objectMapper.getTypeFactory().constructParametricType(List.class, OrderItem.class);
             try {
                 List<OrderItem> ordersList = objectMapper.readValue(orders, javaType);
-                // 设置
+                // 设置排序
                 page.setOrders(ordersList);
             } catch (JsonProcessingException e) {
                 logger.error(e.getMessage(), e);
