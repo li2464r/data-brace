@@ -21,6 +21,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.tool.bean.BeanUtil;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.X509TrustManager;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -104,7 +109,9 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
         // 保存
         UrbanRural urbanRural = saveOrUpdate(0, null, "中国", null, null, null);
         // 获取全国各个省级信息
-        Document connect = connect("http://www.stats.gov.cn/ch/sj/tjbz/tjyqhdmhcxhfdm/2022/");
+        // http://www.stats.gov.cn/ch/sj/tjbz/tjyqhdmhcxhfdm/2022/
+        // https://www.stats.gov.cn/sj/tjbz/tjyqhdmhcxhfdm/2023/index.html
+        Document connect = connect("https://www.stats.gov.cn/sj/tjbz/tjyqhdmhcxhfdm/2023/index.html");
         Elements provinceElements = connect.select("tr.provincetr");
         // 获取省
         provinceInfo(urbanRural.getId(), urbanRural.getAreaCode(), provinceElements, level + 1);
@@ -153,15 +160,15 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
     }
 
     /**
-     * 北京市 天津市 河北省 山西省 内蒙古自治区 辽宁省 吉林省 黑龙江省 上海市 江苏省 浙江省 安徽省 福建省 江西省
-     * TODO 山东省
-     * 河南省 湖北省 湖南省 广东省 广西壮族自治区 海南省 重庆市 四川省 贵州省 云南省 西藏自治区 陕西省 甘肃省 青海省 宁夏回族自治区 新疆维吾尔自治区
+     * 北京市 天津市 河北省 山西省 内蒙古自治区 辽宁省 吉林省 黑龙江省 上海市 江苏省 浙江省 安徽省 福建省 江西省 山东省 河南省 湖北省
+     * TODO 湖南省
+     * 广东省 广西壮族自治区 海南省 重庆市 四川省 贵州省 云南省 西藏自治区 陕西省 甘肃省 青海省 宁夏回族自治区 新疆维吾尔自治区
      *
      * @return 城市列表
      */
     private static List<String> getCityList() {
         List<String> list = new ArrayList<>();
-        list.add("山东省");
+        list.add("湖南省");
         return list;
     }
 
@@ -264,10 +271,11 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
     private Document connect(String url) {
         Document document = null;
         try {
+            init();
             Thread.sleep(500);
             document = Jsoup.connect(url).timeout(5 * 60 * 1000).get();
         } catch (Exception e) {
-            logger.error("Error connecting {}", url);
+            logger.error("Error connecting {}", url, e);
             if (num >= 3) {
                 throw new RuntimeException("Error connecting " + url);
             }
@@ -310,5 +318,28 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
         }
         return s.toString().toUpperCase(Locale.ROOT);
     }
+
+
+    private void init() {
+        try {
+            SSLContext context = SSLContext.getInstance("TLS");
+            context.init(null, new X509TrustManager[]{new X509TrustManager() {
+
+                public void checkServerTrusted(X509Certificate[] chain, String authType) {
+                }
+
+                @Override
+                public void checkClientTrusted(X509Certificate[] x509Certificates, String s) {
+
+                }
+
+                public X509Certificate[] getAcceptedIssuers() {
+                    return new X509Certificate[0];
+                }
+            }}, new SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(context.getSocketFactory());
+        } catch (Exception e) {
+            logger.error("Error initializing SSL", e);
+        }
+    }
 }
-// ssh-keygen -t rsa -C 'li2464r@163.com'
