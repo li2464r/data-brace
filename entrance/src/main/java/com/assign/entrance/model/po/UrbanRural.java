@@ -4,13 +4,11 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import org.springframework.data.redis.core.RedisHash;
 
 import java.io.Serial;
 import java.io.Serializable;
 
 @TableName("urban_rural")
-@RedisHash
 public class UrbanRural extends Model<UrbanRural> implements Serializable {
     @Serial
     private static final long serialVersionUID = 5014379068811962022L;
