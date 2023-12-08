@@ -17,7 +17,7 @@ spring:
     redis:
       port: ${remote.redis.port}
       host: ${remote.redis.ip}
-      database: 0
+      database: 1
       password: Lijieqiang@0204
 
 mybatis-plus:
