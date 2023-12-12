@@ -17,7 +17,6 @@ public class SpringBeanContext<T> implements ApplicationContextAware {
     }
 
     public static <T> T getBean(String beanName) {
-        System.out.println("getBean----" + beanName);
         return (T) applicationContext.getBean(beanName);
     }
 
