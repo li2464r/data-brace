@@ -2,12 +2,14 @@ spring:
   application:
     name: data-brace
   autoconfigure:
+  profiles:
     #排除自动配置的类
     exclude:
       - org.springframework.boot.autoconfigure.mail.MailSenderAutoConfiguration
       - org.springframework.boot.autoconfigure.mail.MailSenderValidatorAutoConfiguration
       - org.springframework.boot.autoconfigure.data.redis.RedisReactiveAutoConfiguration
       - org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration
+    active: huaweiyun
   datasource:
     username: root
     password: Lijieqiang@0204
