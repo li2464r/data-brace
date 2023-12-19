@@ -107,7 +107,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
     public Object insertUrbanRural() {
         int level = 0;
         // 保存
-        UrbanRural urbanRural = saveOrUpdate(0, null, "中国", null, null, null);
+        UrbanRural urbanRural = saveOrUpdate(0L, null, "中国", null, null, null);
         // 获取全国各个省级信息
         // http://www.stats.gov.cn/ch/sj/tjbz/tjyqhdmhcxhfdm/2022/
         // https://www.stats.gov.cn/sj/tjbz/tjyqhdmhcxhfdm/2023/index.html
@@ -119,7 +119,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
         return true;
     }
 
-    private UrbanRural saveOrUpdate(Integer pid, String areaCode, String areaName, String areaCodeParent, Integer areaClass, String urbanRuralClass) {
+    private UrbanRural saveOrUpdate(Long pid, String areaCode, String areaName, String areaCodeParent, Integer areaClass, String urbanRuralClass) {
         // 先查询是否存在
         QueryWrapper<UrbanRural> urbanRuralQueryWrapper = new QueryWrapper<>();
         urbanRuralQueryWrapper.eq("area_name", areaName);
@@ -134,7 +134,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
             urbanRural.setAreaName(areaName);
             urbanRural.setAreaCodeParent(areaCodeParent);
             urbanRural.setAbbreviateEn(toCharacterInitials(areaName.replaceAll(reg, "")));
-            urbanRural.setAreaClass(areaClass);
+            urbanRural.setAreaClass(String.valueOf(areaClass));
             urbanRural.setUrbanRuralClass(urbanRuralClass);
             this.saveOrUpdate(urbanRural);
         }
@@ -142,7 +142,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
     }
 
     // 获取省
-    private void provinceInfo(Integer parentId, String areaCodeParent, Elements provinceElements, int level) {
+    private void provinceInfo(Long parentId, String areaCodeParent, Elements provinceElements, int level) {
         for (Element provinceElement : provinceElements) {
             // 省
             Elements elements = provinceElement.select("a");
@@ -173,7 +173,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
     }
 
     // 获取市
-    private void cityInfo(Integer parentId, String areaCodeParent, Element provinceElement, int level) {
+    private void cityInfo(Long parentId, String areaCodeParent, Element provinceElement, int level) {
         // 获取子级城市
         Document doc = connect(provinceElement.attr("abs:href"));
         Elements cityElements = doc.select("tr.citytr");
@@ -202,7 +202,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
     }
 
     // 获取县
-    private void countyInfo(Integer parentId, String areaCodeParent, Element cityElement, int level) {
+    private void countyInfo(Long parentId, String areaCodeParent, Element cityElement, int level) {
         // 获取子级城市
         Document doc = connect(cityElement.attr("abs:href"));
         Elements countyElements = doc.select("tr.countytr");
@@ -231,7 +231,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
     }
 
     // 获取镇
-    private void townInfo(Integer parentId, String areaCodeParent, Element countyElement, int level) {
+    private void townInfo(Long parentId, String areaCodeParent, Element countyElement, int level) {
         // 获取子级城市
         Document doc = connect(countyElement.attr("abs:href"));
         Elements townElements = doc.select("tr.towntr");
@@ -250,7 +250,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
     }
 
     // 获取村
-    private void villageInfo(Integer parentId, String areaCodeParent, Element townElement, int level) {
+    private void villageInfo(Long parentId, String areaCodeParent, Element townElement, int level) {
         // 获取子级城市
         Document doc = connect(townElement.attr("abs:href"));
         Elements villageElements = doc.select("tr.villagetr");
