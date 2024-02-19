@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.tool.result.Result;
 
 @RestControllerAdvice
-public class GlobalException {
+public class GlobalException extends RuntimeException {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private static final Logger logger = LoggerFactory.getLogger(GlobalException.class);
 
     @ExceptionHandler(value = Exception.class)
     public Result doHandlerRuntimeException(Exception exception) {

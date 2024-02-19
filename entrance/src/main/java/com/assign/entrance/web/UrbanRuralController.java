@@ -1,6 +1,7 @@
 package com.assign.entrance.web;
 
 
+import com.assign.entrance.base.BaseController;
 import com.assign.entrance.base.exception.LibertyException;
 import com.assign.entrance.model.dto.UrbanRuralDto;
 import com.assign.entrance.service.UrbanRuralService;
@@ -11,7 +12,7 @@ import org.tool.result.Result;
 
 @RestController
 @RequestMapping("/urban/rural")
-public class UrbanRuralController {
+public class UrbanRuralController extends BaseController {
 
     private final UrbanRuralService urbanRuralService;
 

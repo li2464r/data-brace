@@ -2,7 +2,6 @@ package com.assign.entrance.common.constants;
 
 public class DataBraceConstant {
 
-
     /**
      * 城市等级
      *
@@ -18,20 +17,20 @@ public class DataBraceConstant {
         TOWN(4, "街道,镇,乡,民族乡,苏木,民族苏木,县辖区"),
         COMMITTEE(5, "居委会,村委会");
 
-        URBANRURAL_AREACLASS(int code, String name) {
+        URBANRURAL_AREACLASS(int code, String description) {
             this.code = code;
-            this.name = name;
+            this.description = description;
         }
 
         public final int code;
-        public final String name;
+        public final String description;
 
         public int getCode() {
             return code;
         }
 
-        public String getName() {
-            return name;
+        public String getDescription() {
+            return description;
         }
     }
 
@@ -41,19 +40,19 @@ public class DataBraceConstant {
         ABNORMAL(2, "禁用");
 
         public final int code;
-        public final String name;
+        public final String description;
 
-        NORMAL(int code, String name) {
+        NORMAL(int code, String description) {
             this.code = code;
-            this.name = name;
+            this.description = description;
         }
 
         public int getCode() {
             return code;
         }
 
-        public String getName() {
-            return name;
+        public String getDescription() {
+            return description;
         }
     }
 

@@ -24,6 +24,7 @@ import org.tool.bean.BeanUtil;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.X509TrustManager;
+import java.io.IOException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
@@ -62,7 +63,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
     @Override
     public List<UrbanRuralVo> selectLevelUrbanRural(UrbanRuralDto urbanRuralDto) {
         QueryWrapper<UrbanRural> wrapper = new QueryWrapper<>();
-        // wrapper.eq("area_class", urbanRuralDto.getAreaClass());
+        // wrapper.eq("area_class", urbanRuralDto.getAreaClass())
         wrapper.eq("normal", DataBraceConstant.NORMAL.NORMAL.getCode());
         wrapper.setEntity(urbanRuralDto);
 
@@ -84,7 +85,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
         wrapper.le("area_class", DataBraceConstant.URBANRURAL_AREACLASS.COUNTY.getCode());
         List<UrbanRural> urbanRuralList = urbanRuralMapper.selectList(wrapper);
         if (urbanRuralList.isEmpty()) {
-            return null;
+            return new ArrayList<>();
         }
         List<UrbanRuralBo> urbanRuralBoList = BeanUtil.copyList(urbanRuralList, UrbanRuralBo.class);
         selectUrbanRural(urbanRuralBoList);
@@ -136,7 +137,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
             urbanRural.setAbbreviateEn(toCharacterInitials(areaName.replaceAll(reg, "")));
             urbanRural.setAreaClass(String.valueOf(areaClass));
             urbanRural.setUrbanRuralClass(urbanRuralClass);
-            this.saveOrUpdate(urbanRural);
+            saveOrUpdate(urbanRural);
         }
         return urbanRural;
     }
@@ -161,9 +162,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
 
     /**
      * <p>北京市 天津市 河北省 山西省 内蒙古自治区 辽宁省 吉林省 黑龙江省 上海市 江苏省 浙江省 安徽省 福建省 江西省 山东省 河南省 湖北省
-     * 湖南省 广东省 广西壮族自治区 海南省 重庆市 四川省 贵州省 云南省 西藏自治区 陕西省 甘肃省 青海省 宁夏回族自治区</p>
-     * TODO 新疆维吾尔自治区
-     *
+     * 湖南省 广东省 广西壮族自治区 海南省 重庆市 四川省 贵州省 云南省 西藏自治区 陕西省 甘肃省 青海省 宁夏回族自治区 新疆维吾尔自治区</p>
      * @return 城市列表
      */
     private static List<String> getCityList() {
@@ -269,16 +268,17 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
     int num = 0;
 
     private Document connect(String url) {
+
         Document document = null;
         try {
             init();
             Thread.sleep(1000);
             document = Jsoup.connect(url).timeout(5 * 60 * 1000).get();
-        } catch (Exception e) {
+        } catch (InterruptedException | IOException e) {
             logger.error("Error connecting {}", url, e);
             if (num >= 3) {
                 num = 0;
-                throw new RuntimeException("Error connecting " + url);
+                throw new LibertyException("Error connecting " + url);
             }
         }
         if (null == document) {
@@ -296,7 +296,8 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
 
     private String toCharacterInitials(String name) {
         StringBuilder s = new StringBuilder();
-        for (char c : name.toCharArray()) {
+        char[] charArray = name.toCharArray();
+        for (char c : charArray) {
             if (c == '鐣') {
                 s.append("c");
                 continue;

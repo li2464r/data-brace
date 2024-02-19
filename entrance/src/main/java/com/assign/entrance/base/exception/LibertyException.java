@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @author <a href="mailto:li2464r@163.com">R</a>
  * @date 2023/10/19 019 下午 02:40
  */
-public class LibertyException extends Exception implements Serializable {
+public class LibertyException extends RuntimeException implements Serializable {
 
     @java.io.Serial
     private static final long serialVersionUID = -7034897190745766939L;

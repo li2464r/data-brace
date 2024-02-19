@@ -3,23 +3,23 @@ package com.assign.entrance.base;
 
 import com.assign.entrance.base.exception.LibertyException;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
+import com.baomidou.mybatisplus.core.toolkit.sql.SqlInjectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.tool.blank.BlankUtil;
+import org.tool.json.JsonUtil;
 
 import java.util.List;
 
 /**
  * @author Administrator
  */
-abstract public class BaseController {
+public abstract class BaseController {
 
     final Logger logger = LoggerFactory.getLogger(BaseController.class);
 
@@ -48,23 +48,16 @@ abstract public class BaseController {
         }
 
         Page<T> page = new Page<>(Long.parseLong(currentPage), Long.parseLong(pageSize));
-
-        if (Strings.isNotBlank(orders)) {
-
-            // 字符串转List<OrderItem> 对象
-            ObjectMapper objectMapper = new ObjectMapper();
-            JavaType javaType = objectMapper.getTypeFactory().constructParametricType(List.class, OrderItem.class);
-            try {
-                List<OrderItem> ordersList = objectMapper.readValue(orders, javaType);
-                // 设置排序
-                page.setOrders(ordersList);
-            } catch (JsonProcessingException e) {
-                logger.error(e.getMessage(), e);
-                throw new LibertyException("获取排序参数失败");
-            }
-
+        if (BlankUtil.isBlankString(orders)) {
+            return page;
         }
-
+        if (SqlInjectionUtils.check(orders)) {
+            throw new LibertyException("排序参数不正确");
+        }
+        // 字符串转List<OrderItem> 对象
+        List<OrderItem> ordersList = JsonUtil.readValueList(orders, OrderItem.class);
+        // 排序参数
+        page.setOrders(ordersList);
         return page;
     }
 
@@ -73,9 +66,8 @@ abstract public class BaseController {
      */
     protected HttpServletRequest getRequest() throws LibertyException {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        if (attributes == null) {
-            logger.error("获取 ServletRequestAttributes 异常");
-            throw new LibertyException("获取排序参数失败");
+        if (null == attributes) {
+            throw new LibertyException("获取 ServletRequestAttributes 异常");
         }
         return attributes.getRequest();
     }
