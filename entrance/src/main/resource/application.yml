@@ -1,40 +1,5 @@
 spring:
   application:
     name: data-brace
-  autoconfigure:
-    #排除自动配置的类
-    exclude:
-      - org.springframework.boot.autoconfigure.mail.MailSenderAutoConfiguration
-      - org.springframework.boot.autoconfigure.mail.MailSenderValidatorAutoConfiguration
-      - org.springframework.boot.autoconfigure.data.redis.RedisReactiveAutoConfiguration
-      - org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration
   profiles:
     active: huaweiyun
-  datasource:
-    username: root
-    password: Lijieqiang@0204
-    url: jdbc:mysql://${remote.mysql.ip}:${remote.mysql.port}/databrace?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true
-    driver-class-name: com.mysql.cj.jdbc.Driver
-  data:
-    redis:
-      port: ${remote.redis.port}
-      host: ${remote.redis.ip}
-      database: 1
-      password: Lijieqiang@0204
-
-mybatis-plus:
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-    map-underscore-to-camel-case: true
-    cache-enabled: true
-
-server:
-  port: 8083
-
-remote:
-  mysql:
-    ip: huaweiyun.server.com
-    port: 3306
-  redis:
-    ip: huaweiyun.server.com
-    port: 6380
