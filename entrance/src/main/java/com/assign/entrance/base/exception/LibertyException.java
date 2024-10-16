@@ -1,5 +1,6 @@
 package com.assign.entrance.base.exception;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -10,7 +11,7 @@ import java.io.Serializable;
  */
 public class LibertyException extends RuntimeException implements Serializable {
 
-    @java.io.Serial
+    @Serial
     private static final long serialVersionUID = -7034897190745766939L;
 
     public LibertyException() {

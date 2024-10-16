@@ -34,8 +34,8 @@ server:
 
 remote:
   mysql:
-    ip: huawei.yun.server.com
+    ip: li2464r.com
     port: 3306
   redis:
-    ip: huawei.yun.server.com
+    ip: apply7.yun.server.com
     port: 6380

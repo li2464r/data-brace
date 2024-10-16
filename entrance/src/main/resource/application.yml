@@ -2,4 +2,4 @@ spring:
   application:
     name: data-brace
   profiles:
-    active: huaweiyun
+    active: li2464r

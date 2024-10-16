@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.tool.result.HttpStatus;
 import org.tool.result.Result;
 
 @RestControllerAdvice
@@ -21,6 +22,12 @@ public class GlobalException extends RuntimeException {
     public Result doHandlerLibertyException(LibertyException libertyException) {
         logger.error("{}", libertyException.getMessage(), libertyException);
         return Result.fail(libertyException.getMessage());
+    }
+
+    @ExceptionHandler(value = ParametersException.class)
+    public Result doHandlerParametersException(ParametersException parametersException) {
+        logger.error("{}", parametersException.getMessage(), parametersException);
+        return Result.fail(HttpStatus.BAD_REQUEST, parametersException.getMessage());
     }
 
 }
