@@ -9,12 +9,12 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.4</version>
+        <version>3.3.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.assign</groupId>
     <artifactId>data-brace</artifactId>
-    <version>3.0.0</version>
+    <version>3.3.0</version>
     <name>data-brace</name>
     <description>data-brace</description>
     <properties>

@@ -1,11 +1,4 @@
 spring:
-  autoconfigure:
-    #排除自动配置的类
-    exclude:
-      - org.springframework.boot.autoconfigure.mail.MailSenderAutoConfiguration
-      - org.springframework.boot.autoconfigure.mail.MailSenderValidatorAutoConfiguration
-      - org.springframework.boot.autoconfigure.data.redis.RedisReactiveAutoConfiguration
-      - org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration
   datasource:
     username: root
     password: Lijieqiang@0204
@@ -28,9 +21,6 @@ mybatis-plus:
       logic-delete-field: normal
       logic-delete-value: 0
       logic-not-delete-value: 1
-
-server:
-  port: 8083
 
 remote:
   mysql:

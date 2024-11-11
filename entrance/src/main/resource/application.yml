@@ -1,5 +1,0 @@
-spring:
-  application:
-    name: data-brace
-  profiles:
-    active: li2464r
