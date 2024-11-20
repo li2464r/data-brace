@@ -5,6 +5,7 @@ import com.assign.entrance.model.dto.IdentityCardAreaDto;
 import com.assign.entrance.service.IdentityCardAreaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,7 +33,7 @@ public class IdentityCardAreaController extends BaseController {
      * @author <a href="mailto:jieqiang.li-ext@ikang.com">jieqiang.li</a>
      * @date 2024/10/15 015 17:30
      */
-    @RequestMapping("/list")
+    @GetMapping("/list")
     public Result selectIdentityCardAreaList(@RequestBody(required = false) IdentityCardAreaDto identityCardAreaDto) {
         return Result.ok().data(identityCardAreaService.selectIdentityCardAreaList(identityCardAreaDto));
     }
@@ -43,7 +44,7 @@ public class IdentityCardAreaController extends BaseController {
      * @author <a href="mailto:jieqiang.li-ext@ikang.com">jieqiang.li</a>
      * @date 2024/10/15 015 17:30
      */
-    @RequestMapping("/group")
+    @GetMapping("/group")
     public Result selectIdentityCardArea() {
         return Result.ok().data(identityCardAreaService.selectIdentityCardArea());
     }
