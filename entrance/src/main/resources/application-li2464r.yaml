@@ -9,11 +9,11 @@ spring:
       port: ${remote.redis.port}
       host: ${remote.redis.ip}
       database: 1
-      password: Lijieqiang@0204
+      password: lijieqiang
 
 mybatis-plus:
   configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    log-impl: com.assign.entrance.base.SQLOutImpl
     map-underscore-to-camel-case: true
     cache-enabled: true
   global-config:
@@ -24,8 +24,8 @@ mybatis-plus:
 
 remote:
   mysql:
-    ip: li2464r.com
+    ip: racacia.love
     port: 3306
   redis:
-    ip: apply7.yun.server.com
+    ip: racacia.love
     port: 6380

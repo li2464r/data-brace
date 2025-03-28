@@ -35,7 +35,7 @@ public class UrbanRuralController extends BaseController {
      *
      * @param urbanRuralDto {@link UrbanRuralDto}
      * @return Result {@link Result}
-     * @author <a href=":lmailtoi2464r@163.com">R</a>
+     * @author <a href=":mailtoli2464r@163.com">R</a>
      * @date 2022/8/5 0005 10:34
      */
     @GetMapping("/list/level")
