@@ -2,14 +2,14 @@ spring:
   datasource:
     username: root
     password: Lijieqiang@0204
-    url: jdbc:mysql://${remote.mysql.ip}:${remote.mysql.port}/databrace?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true
+    url: jdbc:mysql://racacia.love:3306/databrace?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true
     driver-class-name: com.mysql.cj.jdbc.Driver
   data:
     redis:
-      port: ${remote.redis.port}
-      host: ${remote.redis.ip}
-      database: 1
-      password: lijieqiang
+      port: 11191
+      host: redis-11191.c73.us-east-1-2.ec2.redns.redis-cloud.com
+      database: 0
+      password: 5CMw3POJNNgFCytMhe5K0Que3omfVgge
 
 mybatis-plus:
   configuration:
@@ -21,11 +21,3 @@ mybatis-plus:
       logic-delete-field: normal
       logic-delete-value: 0
       logic-not-delete-value: 1
-
-remote:
-  mysql:
-    ip: racacia.love
-    port: 3306
-  redis:
-    ip: racacia.love
-    port: 6380
