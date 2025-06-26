@@ -26,9 +26,36 @@ public interface UrbanRuralService extends IService<UrbanRural> {
      */
     List<UrbanRuralVo> selectLevelUrbanRural(UrbanRuralDto urbanRuralDto);
 
+    /**
+     * 根据ID查询城市信息
+     *
+     * @param id 城市ID
+     * @return 城市信息
+     */
     UrbanRuralVo selectUrbanRuralById(Integer id);
 
+    /**
+     * 根据父ID查询城市信息
+     *
+     * @param pid 父级城市ID
+     * @return 城市信息
+     */
+    List<UrbanRuralVo> selectUrbanRuralByPid(Integer pid);
+
+    /**
+     * 插入城市信息
+     *
+     * @return 插入结果
+     * @throws Exception 插入异常
+     */
     Object insertUrbanRural() throws Exception;
 
+    /**
+     * 生成随机城市数据
+     *
+     * @param address 地址
+     * @param pid 父级城市ID
+     * @return 随机生成的结果
+     */
     String random(String address, Long pid);
 }

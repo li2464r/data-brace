@@ -1,6 +1,7 @@
 package com.racacia.entrance.service.impl;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.racacia.entrance.base.exception.LibertyException;
@@ -71,6 +72,13 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
     @Override
     public UrbanRuralVo selectUrbanRuralById(Integer id) {
         return BeanUtil.copyObject(urbanRuralMapper.selectById(id), UrbanRuralVo.class);
+    }
+
+    @Override
+    public List<UrbanRuralVo> selectUrbanRuralByPid(Integer pid) {
+        LambdaQueryWrapper<UrbanRural> urbanRuralLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        urbanRuralLambdaQueryWrapper.eq(UrbanRural::getPid, pid);
+        return BeanUtil.copyList(urbanRuralMapper.selectList(urbanRuralLambdaQueryWrapper), UrbanRuralVo.class);
     }
 
     // ----------------------------------------------------------------

@@ -57,6 +57,18 @@ public class UrbanRuralController extends BaseController {
         return Result.<UrbanRuralVo>ok().data(urbanRuralService.selectUrbanRuralById(id));
     }
 
+    /**
+     * 根据PID查询城市信息
+     *
+     * @param pid 城市ID
+     * @return Result {@link Result}
+     * @author <a href="mailto:li2464r@163.com">R</a>
+     */
+    @GetMapping("/pid")
+    public Result<List<UrbanRuralVo>> selectUrbanRuralByPid(@RequestParam("pid") Integer pid) {
+        return Result.<List<UrbanRuralVo>>ok().data(urbanRuralService.selectUrbanRuralByPid(pid));
+    }
+
     @PostMapping("/insert")
     public Result<Object> insertUrbanRural() throws Exception {
         return Result.ok().data(urbanRuralService.insertUrbanRural());
