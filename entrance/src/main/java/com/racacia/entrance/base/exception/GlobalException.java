@@ -1,11 +1,11 @@
 package com.racacia.entrance.base.exception;
 
+import love.racacia.result.HttpStatus;
+import love.racacia.result.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.tool.result.HttpStatus;
-import org.tool.result.Result;
 
 @RestControllerAdvice
 public class GlobalException extends RuntimeException {

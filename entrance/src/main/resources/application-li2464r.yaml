@@ -16,8 +16,10 @@ mybatis-plus:
     log-impl: com.racacia.entrance.base.SQLOutImpl
     map-underscore-to-camel-case: true
     cache-enabled: true
+  mapper-locations: classpath*:/mapper/**/*.xml
   global-config:
     db-config:
       logic-delete-field: normal
       logic-delete-value: 'DISABLE'
       logic-not-delete-value: 'ENABLE'
+    banner: off

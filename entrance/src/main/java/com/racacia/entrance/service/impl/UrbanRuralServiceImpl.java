@@ -1,6 +1,8 @@
 package com.racacia.entrance.service.impl;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.racacia.entrance.base.exception.LibertyException;
 import com.racacia.entrance.common.constants.DataBraceConstant;
 import com.racacia.entrance.mapper.UrbanRuralMapper;
@@ -9,8 +11,7 @@ import com.racacia.entrance.model.dto.UrbanRuralDto;
 import com.racacia.entrance.model.po.UrbanRural;
 import com.racacia.entrance.model.vo.UrbanRuralVo;
 import com.racacia.entrance.service.UrbanRuralService;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import love.racacia.bean.BeanUtil;
 import net.sourceforge.pinyin4j.PinyinHelper;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -19,7 +20,6 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.tool.bean.BeanUtil;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;

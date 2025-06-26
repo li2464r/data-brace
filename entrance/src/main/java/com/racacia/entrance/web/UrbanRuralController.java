@@ -1,12 +1,11 @@
 package com.racacia.entrance.web;
 
-
 import com.racacia.entrance.base.BaseController;
 import com.racacia.entrance.model.dto.UrbanRuralDto;
 import com.racacia.entrance.model.vo.UrbanRuralVo;
 import com.racacia.entrance.service.UrbanRuralService;
+import love.racacia.result.Result;
 import org.springframework.web.bind.annotation.*;
-import org.tool.result.Result;
 
 import java.util.List;
 
