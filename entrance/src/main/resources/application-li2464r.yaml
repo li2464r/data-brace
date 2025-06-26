@@ -13,11 +13,11 @@ spring:
 
 mybatis-plus:
   configuration:
-    log-impl: com.assign.entrance.base.SQLOutImpl
+    log-impl: com.racacia.entrance.base.SQLOutImpl
     map-underscore-to-camel-case: true
     cache-enabled: true
   global-config:
     db-config:
       logic-delete-field: normal
-      logic-delete-value: 0
-      logic-not-delete-value: 1
+      logic-delete-value: 'DISABLE'
+      logic-not-delete-value: 'ENABLE'

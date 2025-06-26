@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.assign.entrance.mapper.UrbanRuralMapper">
 
-    <resultMap id="BaseResultMap" type="com.assign.entrance.model.po.UrbanRural">
+    <resultMap id="BaseResultMap" type="com.racacia.entrance.model.po.UrbanRural">
             <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="pid" column="pid" jdbcType="BIGINT"/>
             <result property="areaCode" column="area_code" jdbcType="VARCHAR"/>
