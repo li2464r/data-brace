@@ -75,6 +75,12 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
     }
 
     @Override
+    public List<UrbanRuralVo> selectUrbanRuralByIds(List<Integer> ids) {
+        List<UrbanRural> urbanRuralList = urbanRuralMapper.selectBatchIds(ids);
+        return BeanUtil.copyList(urbanRuralList, UrbanRuralVo.class);
+    }
+
+    @Override
     public List<UrbanRuralVo> selectUrbanRuralByPid(Integer pid) {
         LambdaQueryWrapper<UrbanRural> urbanRuralLambdaQueryWrapper = new LambdaQueryWrapper<>();
         urbanRuralLambdaQueryWrapper.eq(UrbanRural::getPid, pid);

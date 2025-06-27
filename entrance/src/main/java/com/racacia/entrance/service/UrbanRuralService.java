@@ -35,6 +35,14 @@ public interface UrbanRuralService extends IService<UrbanRural> {
     UrbanRuralVo selectUrbanRuralById(Integer id);
 
     /**
+     * 根据ID数组查询城市信息列表
+     *
+     * @param ids 城市ID数组
+     * @return 城市信息列表
+     */
+    List<UrbanRuralVo> selectUrbanRuralByIds(List<Integer> ids);
+
+    /**
      * 根据父ID查询城市信息
      *
      * @param pid 父级城市ID

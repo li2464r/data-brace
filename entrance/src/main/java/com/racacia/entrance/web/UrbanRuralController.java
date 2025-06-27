@@ -58,6 +58,18 @@ public class UrbanRuralController extends BaseController {
     }
 
     /**
+     * 根据ID数组查询城市信息列表
+     *
+     * @param ids 城市ID数组
+     * @return Result {@link Result}
+     * @author <a href="mailto:li2464r@163.com">R</a>
+     */
+    @GetMapping("/ids")
+    public Result<List<UrbanRuralVo>> selectUrbanRuralByIds(@RequestParam("ids") List<Integer> ids) {
+        return Result.<List<UrbanRuralVo>>ok().data(urbanRuralService.selectUrbanRuralByIds(ids));
+    }
+
+    /**
      * 根据PID查询城市信息
      *
      * @param pid 城市ID
