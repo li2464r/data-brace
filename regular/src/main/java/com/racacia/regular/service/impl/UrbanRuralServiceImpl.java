@@ -70,7 +70,8 @@ public class UrbanRuralServiceImpl implements UrbanRuralService {
 
     @Override
     public UrbanRuralVo selectUrbanRuralById(Integer id) {
-        return BeanUtil.copyObject(globalRepository.getUrbanRuralRepository().getUrbanRuralMapper().selectById(id), UrbanRuralVo.class);
+        UrbanRural urbanRural = globalRepository.getUrbanRuralRepository().getUrbanRuralMapper().selectById(id);
+        return BeanUtil.copyObject(urbanRural, UrbanRuralVo.class);
     }
 
     @Override

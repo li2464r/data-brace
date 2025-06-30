@@ -10,8 +10,8 @@ public class UrbanRuralVo implements Serializable {
     @Serial
     private static final long serialVersionUID = 5014379068811962022L;
 
-    private Integer id;
-    private String pid;
+    private Long id;
+    private Long pid;
     private String areaCode;
     private String areaName;
     private String areaCodeParent;
@@ -24,19 +24,19 @@ public class UrbanRuralVo implements Serializable {
     @JsonProperty("urbanRuralBos")
     private List<UrbanRuralVo> urbanRuralVos;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getPid() {
+    public Long getPid() {
         return pid;
     }
 
-    public void setPid(String pid) {
+    public void setPid(Long pid) {
         this.pid = pid;
     }
 
@@ -119,5 +119,4 @@ public class UrbanRuralVo implements Serializable {
     public void setUrbanRuralVos(List<UrbanRuralVo> urbanRuralVos) {
         this.urbanRuralVos = urbanRuralVos;
     }
-
 }
