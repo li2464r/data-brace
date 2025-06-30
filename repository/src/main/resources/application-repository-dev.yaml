@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    username: root
+    password: Lijieqiang@0204
+    url: jdbc:mysql://li2464r.com:3360/practice?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis-plus:
+  configuration:
+    log-impl: com.racacia.repository.config.mybatisplus.SQLOutImpl
+    map-underscore-to-camel-case: true
+    cache-enabled: true
+  mapper-locations: classpath*:/mapper/**/*Mapper.xml
+  global-config:
+    db-config:
+      logic-delete-field: normal
+      logic-delete-value: 'DISABLE'
+      logic-not-delete-value: 'ENABLE'
+    banner: off

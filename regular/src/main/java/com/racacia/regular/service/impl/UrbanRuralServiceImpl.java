@@ -3,15 +3,14 @@ package com.racacia.regular.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.racacia.regular.base.exception.LibertyException;
 import com.racacia.regular.common.constants.DataBraceConstant;
-import com.racacia.regular.mapper.UrbanRuralMapper;
-import com.racacia.regular.model.bo.UrbanRuralBo;
 import com.racacia.regular.model.dto.UrbanRuralDto;
-import com.racacia.regular.model.po.UrbanRural;
 import com.racacia.regular.model.vo.UrbanRuralVo;
 import com.racacia.regular.service.UrbanRuralService;
+import com.racacia.repository.model.bo.UrbanRuralBo;
+import com.racacia.repository.model.po.UrbanRural;
+import com.racacia.repository.service.GlobalRepository;
 import love.racacia.bean.BeanUtil;
 import net.sourceforge.pinyin4j.PinyinHelper;
 import org.jsoup.Jsoup;
@@ -34,14 +33,14 @@ import java.util.Locale;
 import java.util.Objects;
 
 @Service
-public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRural> implements UrbanRuralService {
+public class UrbanRuralServiceImpl implements UrbanRuralService {
 
     Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final UrbanRuralMapper urbanRuralMapper;
+    private final GlobalRepository globalRepository;
 
-    public UrbanRuralServiceImpl(UrbanRuralMapper urbanRuralMapper) {
-        this.urbanRuralMapper = urbanRuralMapper;
+    public UrbanRuralServiceImpl(GlobalRepository globalRepository) {
+        this.globalRepository = globalRepository;
     }
 
     @Override
@@ -54,7 +53,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
         QueryWrapper<UrbanRural> wrapper = new QueryWrapper<>();
         wrapper.setEntity(urbanRuralDto);
         // 查询第一级城市
-        List<UrbanRuralBo> urbanRuralBoList = BeanUtil.copyList(urbanRuralMapper.selectList(wrapper), UrbanRuralBo.class);
+        List<UrbanRuralBo> urbanRuralBoList = BeanUtil.copyList(globalRepository.getUrbanRuralRepository().getUrbanRuralMapper().selectList(wrapper), UrbanRuralBo.class);
         // 递归查询下级城市
         List<UrbanRuralBo> urbanRuralBoList1 = selectUrbanRural(urbanRuralBoList);
         return BeanUtil.copyNestList(urbanRuralBoList1, UrbanRuralVo.class);
@@ -66,17 +65,17 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
         // wrapper.eq("area_class", urbanRuralDto.getAreaClass())
         wrapper.setEntity(urbanRuralDto);
 
-        return BeanUtil.copyList(urbanRuralMapper.selectList(wrapper), UrbanRuralVo.class);
+        return BeanUtil.copyList(globalRepository.getUrbanRuralRepository().getUrbanRuralMapper().selectList(wrapper), UrbanRuralVo.class);
     }
 
     @Override
     public UrbanRuralVo selectUrbanRuralById(Integer id) {
-        return BeanUtil.copyObject(urbanRuralMapper.selectById(id), UrbanRuralVo.class);
+        return BeanUtil.copyObject(globalRepository.getUrbanRuralRepository().getUrbanRuralMapper().selectById(id), UrbanRuralVo.class);
     }
 
     @Override
     public List<UrbanRuralVo> selectUrbanRuralByIds(List<Integer> ids) {
-        List<UrbanRural> urbanRuralList = urbanRuralMapper.selectBatchIds(ids);
+        List<UrbanRural> urbanRuralList = globalRepository.getUrbanRuralRepository().getUrbanRuralMapper().selectBatchIds(ids);
         return BeanUtil.copyList(urbanRuralList, UrbanRuralVo.class);
     }
 
@@ -84,7 +83,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
     public List<UrbanRuralVo> selectUrbanRuralByPid(Integer pid) {
         LambdaQueryWrapper<UrbanRural> urbanRuralLambdaQueryWrapper = new LambdaQueryWrapper<>();
         urbanRuralLambdaQueryWrapper.eq(UrbanRural::getPid, pid);
-        return BeanUtil.copyList(urbanRuralMapper.selectList(urbanRuralLambdaQueryWrapper), UrbanRuralVo.class);
+        return BeanUtil.copyList(globalRepository.getUrbanRuralRepository().getUrbanRuralMapper().selectList(urbanRuralLambdaQueryWrapper), UrbanRuralVo.class);
     }
 
     // ----------------------------------------------------------------
@@ -99,7 +98,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
         QueryWrapper<UrbanRural> wrapper = new QueryWrapper<>();
         wrapper.eq("pid", urbanRuralBo.getId());
         wrapper.le("area_class", DataBraceConstant.URBANRURAL_AREACLASS.COUNTY.getCode());
-        List<UrbanRural> urbanRuralList = urbanRuralMapper.selectList(wrapper);
+        List<UrbanRural> urbanRuralList = globalRepository.getUrbanRuralRepository().getUrbanRuralMapper().selectList(wrapper);
         if (urbanRuralList.isEmpty()) {
             return new ArrayList<>();
         }
@@ -124,7 +123,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
         QueryWrapper<UrbanRural> urbanRuralQueryWrapper = new QueryWrapper<>();
         urbanRuralQueryWrapper.eq("pid", pid);
         urbanRuralQueryWrapper.last("ORDER BY RAND() limit 1");
-        UrbanRural urbanRural = urbanRuralMapper.selectOne(urbanRuralQueryWrapper);
+        UrbanRural urbanRural = globalRepository.getUrbanRuralRepository().getUrbanRuralMapper().selectOne(urbanRuralQueryWrapper);
         if (null == urbanRural) {
             return address;
         }
@@ -160,7 +159,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
         urbanRuralQueryWrapper.eq("area_name", areaName);
         urbanRuralQueryWrapper.eq(null != areaCode, "area_code", areaCode);
         urbanRuralQueryWrapper.eq("normal", 1);
-        UrbanRural urbanRural = baseMapper.selectOne(urbanRuralQueryWrapper);
+        UrbanRural urbanRural = globalRepository.getUrbanRuralRepository().getUrbanRuralMapper().selectOne(urbanRuralQueryWrapper);
         if (null == urbanRural) {
             logger.info("{}", areaName);
             urbanRural = new UrbanRural();
@@ -171,7 +170,7 @@ public class UrbanRuralServiceImpl extends ServiceImpl<UrbanRuralMapper, UrbanRu
             urbanRural.setAbbreviateEn(toCharacterInitials(areaName.replaceAll(reg, "")));
             urbanRural.setAreaClass(String.valueOf(areaClass));
             urbanRural.setUrbanRuralClass(urbanRuralClass);
-            saveOrUpdate(urbanRural);
+            globalRepository.getUrbanRuralRepository().saveOrUpdate(urbanRural);
         }
         return urbanRural;
     }

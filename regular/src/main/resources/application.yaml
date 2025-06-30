@@ -1,0 +1,31 @@
+spring:
+  profiles:
+    include:
+      - repository-${spring.profiles.active}
+      - middleware-${spring.profiles.active}
+  application:
+    name: data-brace
+  autoconfigure:
+    #排除自动配置的类
+    exclude:
+      - org.springframework.boot.autoconfigure.mail.MailSenderAutoConfiguration
+      - org.springframework.boot.autoconfigure.mail.MailSenderValidatorAutoConfiguration
+  main:
+    allow-bean-definition-overriding: true
+    banner-mode: off
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  data:
+    jpa:
+      repositories:
+        bootstrap-mode: lazy
+
+logging:
+  pattern:
+    dateformat: yyyy-MM-dd HH:mm:ss.SSS
+
+server:
+  port: 8084
+  servlet:
+    context-path: /data/brace

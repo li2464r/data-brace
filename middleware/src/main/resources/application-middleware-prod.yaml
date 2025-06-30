@@ -1,0 +1,14 @@
+spring:
+  data:
+    redis:
+      port: 11191
+      host: redis-11191.c73.us-east-1-2.ec2.redns.redis-cloud.com
+      database: 0
+      password: 5CMw3POJNNgFCytMhe5K0Que3omfVgge
+      connect-timeout: 10000
+      lettuce:
+        pool:
+          max-idle: 8
+          min-idle: 4
+          max-wait: 2000
+          max-active: 6

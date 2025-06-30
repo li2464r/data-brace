@@ -2,13 +2,11 @@ package com.racacia.regular.service;
 
 
 import com.racacia.regular.model.dto.UrbanRuralDto;
-import com.racacia.regular.model.po.UrbanRural;
 import com.racacia.regular.model.vo.UrbanRuralVo;
-import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
 
-public interface UrbanRuralService extends IService<UrbanRural> {
+public interface UrbanRuralService {
 
     /**
      * 查询所有的层级城市

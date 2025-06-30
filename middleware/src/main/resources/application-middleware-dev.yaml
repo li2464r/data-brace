@@ -1,0 +1,13 @@
+spring:
+  data:
+    redis:
+      port: 6380
+      host: apply7.yun.server.com
+      database: 0
+      password: Lijieqiang@0204
+      lettuce:
+        pool:
+          max-idle: 8
+          min-idle: 4
+          max-wait: 2000
+          max-active: 6

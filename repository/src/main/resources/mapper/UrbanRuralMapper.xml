@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.racacia.repository.mapper.UrbanRuralMapper">
+
+    <resultMap id="BaseResultMap" type="com.racacia.repository.model.po.UrbanRural">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="pid" column="pid" jdbcType="BIGINT"/>
+            <result property="areaCode" column="area_code" jdbcType="VARCHAR"/>
+            <result property="areaName" column="area_name" jdbcType="VARCHAR"/>
+            <result property="areaCodeParent" column="area_code_parent" jdbcType="VARCHAR"/>
+            <result property="abbreviateEn" column="abbreviate_en" jdbcType="VARCHAR"/>
+            <result property="abbreviateCh" column="abbreviate_ch" jdbcType="VARCHAR"/>
+            <result property="areaClass" column="area_class" jdbcType="CHAR"/>
+            <result property="urbanRuralClass" column="urban_rural_class" jdbcType="VARCHAR"/>
+            <result property="postalCode" column="postal_code" jdbcType="VARCHAR"/>
+            <result property="createDate" column="create_date" jdbcType="TIMESTAMP"/>
+            <result property="createUser" column="create_user" jdbcType="INTEGER"/>
+            <result property="updateDate" column="update_date" jdbcType="TIMESTAMP"/>
+            <result property="updateUser" column="update_user" jdbcType="INTEGER"/>
+            <result property="normal" column="normal" jdbcType="CHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,pid,area_code,
+        area_name,area_code_parent,abbreviate_en,
+        abbreviate_ch,area_class,urban_rural_class,
+        postal_code,create_date,create_user,
+        update_date,update_user,normal
+    </sql>
+</mapper>

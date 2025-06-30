@@ -2,15 +2,13 @@ package com.racacia.regular.service;
 
 
 import com.racacia.regular.model.dto.IdentityCardAreaDto;
-import com.racacia.regular.model.po.IdentityCardArea;
 import com.racacia.regular.model.vo.IdentityCardAreaVo;
-import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
 import java.util.Map;
 
 
-public interface IdentityCardAreaService extends IService<IdentityCardArea> {
+public interface IdentityCardAreaService {
 
     /**
      * 查询身份信息城市区域code
