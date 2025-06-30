@@ -1,12 +1,12 @@
-package com.racacia.regular.base;
+package com.racacia.repository.config.mybatisplus;
 
 import org.apache.ibatis.logging.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author <a href="mailto:li2464r@163.com">R</a>
- * @date 2025/3/28 10:46
+ * @author <a href="mailto:li2464r@163.com">li2464r</a>
+ * @date 2024-03-06 11:45
  */
 public class SQLOutImpl implements Log {
 

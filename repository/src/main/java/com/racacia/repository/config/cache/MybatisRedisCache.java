@@ -1,12 +1,15 @@
-package com.racacia.regular.base.cache;
+package com.racacia.repository.config.cache;
 
+import com.racacia.redis.config.RedisConfig;
 import org.apache.ibatis.cache.Cache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import reactor.core.publisher.Flux;
 
+import java.time.Duration;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
@@ -15,8 +18,6 @@ import java.util.stream.Collectors;
  * @author Administrator
  * @date 2022/3/30 0030 10:37
  */
-
-
 public class MybatisRedisCache implements Cache {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -27,9 +28,10 @@ public class MybatisRedisCache implements Cache {
 
     private final String id;
 
-    public MybatisRedisCache(final String id) {
+    @SuppressWarnings("unchecked")
+    public MybatisRedisCache(String id) {
         this.id = id;
-        this.reactiveRedisTemplate = SpringBeanContext.getBean("ReactiveRedisTemplate");
+        this.reactiveRedisTemplate = (ReactiveRedisTemplate<String, Object>) SpringBeanContext.build().getBean(RedisConfig.REACTIVE_REDIS_TEMPLATE);
     }
 
     @Override
@@ -39,6 +41,7 @@ public class MybatisRedisCache implements Cache {
 
     @Override
     public void putObject(Object hashKey, Object hashValue) {
+        reactiveRedisTemplate.expire(id, Duration.ofMinutes(3)).subscribe();
         reactiveRedisTemplate.opsForHash().put(id, hashKey, hashValue).subscribe();
     }
 
@@ -46,7 +49,11 @@ public class MybatisRedisCache implements Cache {
     public Object getObject(Object hashKey) {
         try {
             return reactiveRedisTemplate.opsForHash().get(id, hashKey).toFuture().get();
-        } catch (Exception e) {
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            logger.error("Failed to get object", e);
+            return null;
+        } catch (ExecutionException e) {
             logger.error("Failed to get object", e);
             return null;
         }
@@ -73,5 +80,4 @@ public class MybatisRedisCache implements Cache {
     public ReadWriteLock getReadWriteLock() {
         return readWriteLock;
     }
-
 }
