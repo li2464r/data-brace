@@ -49,6 +49,14 @@ public interface UrbanRuralService {
     List<UrbanRuralVo> selectUrbanRuralByPid(Integer pid);
 
     /**
+     * 根据ID数组查询城市信息列表
+     *
+     * @param ids 城市ID数组
+     * @return 城市信息列表
+     */
+    List<UrbanRuralVo> selectUrbanRuralByAreaClassIds(List<Integer> ids);
+
+    /**
      * 插入城市信息
      *
      * @return 插入结果
@@ -63,5 +71,5 @@ public interface UrbanRuralService {
      * @param pid 父级城市ID
      * @return 随机生成的结果
      */
-    String random(String address, Long pid);
+    String random(String address, Integer pid);
 }

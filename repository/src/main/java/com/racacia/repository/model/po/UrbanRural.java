@@ -18,12 +18,12 @@ public class UrbanRural implements Serializable {
      * ID
      */
     @TableId(type = IdType.AUTO)
-    private Long id;
+    private Integer id;
 
     /**
      * 父ID
      */
-    private Long pid;
+    private Integer pid;
 
     /**
      * 代码
@@ -99,28 +99,28 @@ public class UrbanRural implements Serializable {
     /**
      * ID
      */
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
     /**
      * ID
      */
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
     /**
      * 父ID
      */
-    public Long getPid() {
+    public Integer getPid() {
         return pid;
     }
 
     /**
      * 父ID
      */
-    public void setPid(Long pid) {
+    public void setPid(Integer pid) {
         this.pid = pid;
     }
 

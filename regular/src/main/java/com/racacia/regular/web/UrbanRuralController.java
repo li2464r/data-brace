@@ -4,6 +4,7 @@ import com.racacia.regular.base.BaseController;
 import com.racacia.regular.model.dto.UrbanRuralDto;
 import com.racacia.regular.model.vo.UrbanRuralVo;
 import com.racacia.regular.service.UrbanRuralService;
+import jakarta.validation.constraints.Size;
 import love.racacia.result.Result;
 import org.springframework.web.bind.annotation.*;
 
@@ -65,7 +66,7 @@ public class UrbanRuralController extends BaseController {
      * @author <a href="mailto:li2464r@163.com">R</a>
      */
     @GetMapping("/ids")
-    public Result<List<UrbanRuralVo>> selectUrbanRuralByIds(@RequestParam("ids") List<Integer> ids) {
+    public Result<List<UrbanRuralVo>> selectUrbanRuralByIds(@RequestParam("ids") @Size(min = 1) List<Integer> ids) {
         return Result.<List<UrbanRuralVo>>ok().data(urbanRuralService.selectUrbanRuralByIds(ids));
     }
 
@@ -81,6 +82,18 @@ public class UrbanRuralController extends BaseController {
         return Result.<List<UrbanRuralVo>>ok().data(urbanRuralService.selectUrbanRuralByPid(pid));
     }
 
+    /**
+     * 根据PID查询城市信息
+     *
+     * @param ids 城市ID
+     * @return Result {@link Result}
+     * @author <a href="mailto:li2464r@163.com">R</a>
+     */
+    @GetMapping("/area/class/ids")
+    public Result<List<UrbanRuralVo>> selectUrbanRuralByAreaClassIds(@RequestParam("ids") @Size(min = 5, max = 5) List<Integer> ids) {
+        return Result.<List<UrbanRuralVo>>ok().data(urbanRuralService.selectUrbanRuralByAreaClassIds(ids));
+    }
+
     @PostMapping("/insert")
     public Result<Object> insertUrbanRural() throws Exception {
         return Result.ok().data(urbanRuralService.insertUrbanRural());
@@ -88,7 +101,7 @@ public class UrbanRuralController extends BaseController {
 
     @GetMapping("/random")
     public Result<Object> random() {
-        return Result.ok().data(urbanRuralService.random("", 84L));
+        return Result.ok().data(urbanRuralService.random("", 84));
     }
 
 }

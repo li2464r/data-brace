@@ -12,6 +12,7 @@ import com.racacia.repository.model.bo.UrbanRuralBo;
 import com.racacia.repository.model.po.UrbanRural;
 import com.racacia.repository.service.GlobalRepository;
 import love.racacia.bean.BeanUtil;
+import love.racacia.tree.TreeUtil;
 import net.sourceforge.pinyin4j.PinyinHelper;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -87,6 +88,12 @@ public class UrbanRuralServiceImpl implements UrbanRuralService {
         return BeanUtil.copyList(globalRepository.getUrbanRuralRepository().getUrbanRuralMapper().selectList(urbanRuralLambdaQueryWrapper), UrbanRuralVo.class);
     }
 
+    @Override
+    public List<UrbanRuralVo> selectUrbanRuralByAreaClassIds(List<Integer> ids) {
+        List<UrbanRuralVo> urbanRuralVoList = selectUrbanRuralByIds(ids);
+        return TreeUtil.buildTree(urbanRuralVoList, urbanRuralVoList.get(0).getPid(), UrbanRuralVo::getId, UrbanRuralVo::getPid, UrbanRuralVo::setChildren);
+    }
+
     // ----------------------------------------------------------------
 
     /**
@@ -112,12 +119,12 @@ public class UrbanRuralServiceImpl implements UrbanRuralService {
      * 递归查询子城市
      */
     private List<UrbanRuralBo> selectUrbanRural(List<UrbanRuralBo> urbanRuralBoList) {
-        urbanRuralBoList.parallelStream().forEach(urbanRuralBo -> urbanRuralBo.setUrbanRuralBos(selectUrbanRural(urbanRuralBo)));
+        urbanRuralBoList.parallelStream().forEach(urbanRuralBo -> urbanRuralBo.setChildren(selectUrbanRural(urbanRuralBo)));
         return urbanRuralBoList;
     }
 
     @Override
-    public String random(String address, Long pid) {
+    public String random(String address, Integer pid) {
         // 随机获取一个位置
 
         // 先查询上级为中国的城市
@@ -142,7 +149,7 @@ public class UrbanRuralServiceImpl implements UrbanRuralService {
     public Object insertUrbanRural() {
         int level = 0;
         // 保存
-        UrbanRural urbanRural = saveOrUpdate(0L, null, "中国", null, null, null);
+        UrbanRural urbanRural = saveOrUpdate(0, null, "中国", null, null, null);
         // 获取全国各个省级信息
         // http://www.stats.gov.cn/ch/sj/tjbz/tjyqhdmhcxhfdm/2022/
         // https://www.stats.gov.cn/sj/tjbz/tjyqhdmhcxhfdm/2023/index.html
@@ -154,7 +161,7 @@ public class UrbanRuralServiceImpl implements UrbanRuralService {
         return true;
     }
 
-    private UrbanRural saveOrUpdate(Long pid, String areaCode, String areaName, String areaCodeParent, Integer areaClass, String urbanRuralClass) {
+    private UrbanRural saveOrUpdate(Integer pid, String areaCode, String areaName, String areaCodeParent, Integer areaClass, String urbanRuralClass) {
         // 先查询是否存在
         QueryWrapper<UrbanRural> urbanRuralQueryWrapper = new QueryWrapper<>();
         urbanRuralQueryWrapper.eq("area_name", areaName);
@@ -177,7 +184,7 @@ public class UrbanRuralServiceImpl implements UrbanRuralService {
     }
 
     // 获取省
-    private void provinceInfo(Long parentId, String areaCodeParent, Elements provinceElements, int level) {
+    private void provinceInfo(Integer parentId, String areaCodeParent, Elements provinceElements, int level) {
         for (Element provinceElement : provinceElements) {
             // 省
             Elements elements = provinceElement.select("a");
@@ -207,7 +214,7 @@ public class UrbanRuralServiceImpl implements UrbanRuralService {
     }
 
     // 获取市
-    private void cityInfo(Long parentId, String areaCodeParent, Element provinceElement, int level) {
+    private void cityInfo(Integer parentId, String areaCodeParent, Element provinceElement, int level) {
         // 获取子级城市
         Document doc = connect(provinceElement.attr("abs:href"));
         Elements cityElements = doc.select("tr.citytr");
@@ -236,7 +243,7 @@ public class UrbanRuralServiceImpl implements UrbanRuralService {
     }
 
     // 获取县
-    private void countyInfo(Long parentId, String areaCodeParent, Element cityElement, int level) {
+    private void countyInfo(Integer parentId, String areaCodeParent, Element cityElement, int level) {
         // 获取子级城市
         Document doc = connect(cityElement.attr("abs:href"));
         Elements countyElements = doc.select("tr.countytr");
@@ -265,7 +272,7 @@ public class UrbanRuralServiceImpl implements UrbanRuralService {
     }
 
     // 获取镇
-    private void townInfo(Long parentId, String areaCodeParent, Element countyElement, int level) {
+    private void townInfo(Integer parentId, String areaCodeParent, Element countyElement, int level) {
         // 获取子级城市
         Document doc = connect(countyElement.attr("abs:href"));
         Elements townElements = doc.select("tr.towntr");
@@ -284,7 +291,7 @@ public class UrbanRuralServiceImpl implements UrbanRuralService {
     }
 
     // 获取村
-    private void villageInfo(Long parentId, String areaCodeParent, Element townElement, int level) {
+    private void villageInfo(Integer parentId, String areaCodeParent, Element townElement, int level) {
         // 获取子级城市
         Document doc = connect(townElement.attr("abs:href"));
         Elements villageElements = doc.select("tr.villagetr");

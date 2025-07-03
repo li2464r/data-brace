@@ -10,13 +10,13 @@ public class UrbanRuralBo extends UrbanRural implements Serializable {
     @Serial
     private static final long serialVersionUID = 5014379068811962022L;
 
-    private List<UrbanRuralBo> urbanRuralBos;
+    private List<UrbanRuralBo> children;
 
-    public List<UrbanRuralBo> getUrbanRuralBos() {
-        return urbanRuralBos;
+    public List<UrbanRuralBo> getChildren() {
+        return children;
     }
 
-    public void setUrbanRuralBos(List<UrbanRuralBo> urbanRuralBos) {
-        this.urbanRuralBos = urbanRuralBos;
+    public void setChildren(List<UrbanRuralBo> children) {
+        this.children = children;
     }
 }
