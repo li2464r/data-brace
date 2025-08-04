@@ -6,30 +6,25 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
-/**
- * @author Administrator
- * @date 2022/3/30 0030 11:38
- */
 @Component
 public class SpringBeanContext implements ApplicationContextAware {
 
-    private static ApplicationContext application;
-
-    public static ApplicationContext build(){
-        return application;
-    }
+    private static ApplicationContext applicationContext;
 
     @Override
     public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
-        application = applicationContext;
+        SpringBeanContext.applicationContext = applicationContext;
     }
 
-    public Object getBean(String beanName) {
-        return application.getBean(beanName);
+    public static ApplicationContext getApplicationContext() {
+        return applicationContext;
     }
 
-    public <T> T getBean(String beanName, Class<T> clazz) {
-        return application.getBean(beanName, clazz);
+    public static Object getBean(String beanName) {
+        return applicationContext.getBean(beanName);
     }
 
+    public static <T> T getBean(String beanName, Class<T> clazz) {
+        return applicationContext.getBean(beanName, clazz);
+    }
 }

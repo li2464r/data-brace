@@ -1,5 +1,6 @@
 package com.racacia.repository.service.impl;
 
+import com.racacia.repository.MiddlewareRepository;
 import com.racacia.repository.service.GlobalRepository;
 import com.racacia.repository.service.IdentityCardAreaRepository;
 import com.racacia.repository.service.UrbanRuralRepository;
@@ -14,12 +15,14 @@ public class GlobalRepositoryImpl implements GlobalRepository {
 
     private final IdentityCardAreaRepository identityCardAreaRepository;
     private final UrbanRuralRepository urbanRuralRepository;
+    private final MiddlewareRepository middlewareRepository;
 
 
     public GlobalRepositoryImpl(IdentityCardAreaRepository identityCardAreaRepository,
-                                UrbanRuralRepository urbanRuralRepository) {
+                                UrbanRuralRepository urbanRuralRepository, MiddlewareRepository middlewareRepository) {
         this.identityCardAreaRepository = identityCardAreaRepository;
         this.urbanRuralRepository = urbanRuralRepository;
+        this.middlewareRepository = middlewareRepository;
     }
 
     @Override
@@ -32,5 +35,8 @@ public class GlobalRepositoryImpl implements GlobalRepository {
         return urbanRuralRepository;
     }
 
-
+    @Override
+    public MiddlewareRepository getMiddlewareRepository() {
+        return middlewareRepository;
+    }
 }

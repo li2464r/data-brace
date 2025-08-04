@@ -16,7 +16,7 @@ public class MiddlewareRepositoryImpl implements MiddlewareRepository {
     private final ReactiveRedisTemplate<String, Object> reactiveRedisTemplate;
 
     public MiddlewareRepositoryImpl(@Qualifier("RedisTemplate") RedisTemplate<String, Object> redisTemplate,
-                                    ReactiveRedisTemplate<String, Object> reactiveRedisTemplate) {
+                                    @Qualifier("ReactiveRedisTemplate") ReactiveRedisTemplate<String, Object> reactiveRedisTemplate) {
         this.redisTemplate = redisTemplate;
         this.reactiveRedisTemplate = reactiveRedisTemplate;
     }
