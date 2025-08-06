@@ -1,4 +1,4 @@
-package com.racacia.redis.serializer;
+package com.racacia.middleware.redis.serializer;
 
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.SerializationException;

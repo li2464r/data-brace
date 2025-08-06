@@ -1,6 +1,6 @@
 package com.racacia.repository.service;
 
-import com.racacia.repository.MiddlewareRepository;
+import com.racacia.middleware.repository.MiddlewareRepository;
 
 /**
  * @author Administrator

@@ -1,6 +1,6 @@
 package com.racacia.repository.service.impl;
 
-import com.racacia.repository.MiddlewareRepository;
+import com.racacia.middleware.repository.MiddlewareRepository;
 import com.racacia.repository.service.GlobalRepository;
 import com.racacia.repository.service.IdentityCardAreaRepository;
 import com.racacia.repository.service.UrbanRuralRepository;

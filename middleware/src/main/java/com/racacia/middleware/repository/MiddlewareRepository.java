@@ -1,4 +1,4 @@
-package com.racacia.repository;
+package com.racacia.middleware.repository;
 
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.data.redis.core.RedisTemplate;

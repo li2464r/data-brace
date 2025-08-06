@@ -1,6 +1,6 @@
-package com.racacia.repository.impl;
+package com.racacia.middleware.repository.impl;
 
-import com.racacia.repository.MiddlewareRepository;
+import com.racacia.middleware.repository.MiddlewareRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.data.redis.core.RedisTemplate;

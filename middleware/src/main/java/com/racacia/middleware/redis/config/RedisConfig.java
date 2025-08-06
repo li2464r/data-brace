@@ -1,4 +1,4 @@
-package com.racacia.redis.config;
+package com.racacia.middleware.redis.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -9,7 +9,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
-import com.racacia.redis.serializer.KeyRedisSerializer;
+import com.racacia.middleware.redis.serializer.KeyRedisSerializer;
 import love.racacia.date.DateUtil;
 import love.racacia.json.JsonUtil;
 import org.springframework.beans.factory.annotation.Configurable;
