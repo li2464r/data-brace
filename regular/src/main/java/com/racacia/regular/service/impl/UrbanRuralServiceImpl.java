@@ -3,6 +3,7 @@ package com.racacia.regular.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.racacia.regular.base.exception.LibertyException;
 import com.racacia.regular.common.constants.DataBraceConstant;
 import com.racacia.regular.model.dto.UrbanRuralDto;
@@ -52,7 +53,8 @@ public class UrbanRuralServiceImpl implements UrbanRuralService {
         }
         // 查询条件
         QueryWrapper<UrbanRural> wrapper = new QueryWrapper<>();
-        wrapper.setEntity(urbanRuralDto);
+        UrbanRural urbanRural = BeanUtil.copyObject(urbanRuralDto, UrbanRural.class);
+        wrapper.setEntity(urbanRural);
         // 查询第一级城市
         List<UrbanRuralBo> urbanRuralBoList = BeanUtil.copyList(globalRepository.getUrbanRuralRepository().getUrbanRuralMapper().selectList(wrapper), UrbanRuralBo.class);
         // 递归查询下级城市
@@ -62,11 +64,9 @@ public class UrbanRuralServiceImpl implements UrbanRuralService {
 
     @Override
     public List<UrbanRuralVo> selectLevelUrbanRural(UrbanRuralDto urbanRuralDto) {
-        QueryWrapper<UrbanRural> wrapper = new QueryWrapper<>();
-        // wrapper.eq("area_class", urbanRuralDto.getAreaClass())
-        wrapper.setEntity(urbanRuralDto);
-
-        return BeanUtil.copyList(globalRepository.getUrbanRuralRepository().getUrbanRuralMapper().selectList(wrapper), UrbanRuralVo.class);
+        LambdaQueryWrapper<UrbanRural> urbanRuralLambdaQueryWrapper = Wrappers.lambdaQuery(UrbanRural.class);
+        urbanRuralLambdaQueryWrapper.eq(UrbanRural::getAreaClass, urbanRuralDto.getAreaClass());
+        return BeanUtil.copyList(globalRepository.getUrbanRuralRepository().getUrbanRuralMapper().selectList(urbanRuralLambdaQueryWrapper), UrbanRuralVo.class);
     }
 
     @Override

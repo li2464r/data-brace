@@ -1,5 +1,6 @@
 package com.racacia.repository.config.cache;
 
+import com.racacia.middleware.redis.config.RedisConfig;
 import org.apache.ibatis.cache.Cache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,14 +24,14 @@ public class MybatisRedisCache implements Cache {
 
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
+    private final ReactiveRedisTemplate<String, Object> reactiveRedisTemplate;
+
     private final String id;
 
-    private volatile ReactiveRedisTemplate<String, Object> reactiveRedisTemplate;
-
-
+    @SuppressWarnings("unchecked")
     public MybatisRedisCache(String id) {
         this.id = id;
-        this.reactiveRedisTemplate = SpringBeanContext.getBean("ReactiveRedisTemplate", ReactiveRedisTemplate.class);
+        this.reactiveRedisTemplate = (ReactiveRedisTemplate<String, Object>) SpringBeanContext.build().getBean(RedisConfig.REACTIVE_REDIS_TEMPLATE);
     }
 
     @Override

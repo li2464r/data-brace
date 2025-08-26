@@ -6,13 +6,6 @@ package com.racacia.repository.base;
  */
 public class Constants {
 
-    // ------------------------------------公司------------------------------------
-
-    /**
-     * 异常：公司不存在
-     */
-    public static final String EXCEPTION_COMPANY_NOT_EXISTS = "exception.company.not.exists";
-
     private Constants() {
     }
 

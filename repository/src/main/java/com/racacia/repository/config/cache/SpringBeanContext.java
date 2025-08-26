@@ -9,22 +9,23 @@ import org.springframework.stereotype.Component;
 @Component
 public class SpringBeanContext implements ApplicationContextAware {
 
-    private static ApplicationContext applicationContext;
+    private static ApplicationContext application;
+
+    public static ApplicationContext build(){
+        return application;
+    }
 
     @Override
     public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
-        SpringBeanContext.applicationContext = applicationContext;
+        SpringBeanContext.application = applicationContext;
     }
 
-    public static ApplicationContext getApplicationContext() {
-        return applicationContext;
+    public Object getBean(String beanName) {
+        return application.getBean(beanName);
     }
 
-    public static Object getBean(String beanName) {
-        return applicationContext.getBean(beanName);
+    public <T> T getBean(String beanName, Class<T> clazz) {
+        return application.getBean(beanName, clazz);
     }
 
-    public static <T> T getBean(String beanName, Class<T> clazz) {
-        return applicationContext.getBean(beanName, clazz);
-    }
 }

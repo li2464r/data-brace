@@ -13,19 +13,19 @@ public class GlobalException extends RuntimeException {
     private static final Logger logger = LoggerFactory.getLogger(GlobalException.class);
 
     @ExceptionHandler(value = Exception.class)
-    public Result doHandlerRuntimeException(Exception exception) {
+    public Result<Object> doHandlerRuntimeException(Exception exception) {
         logger.error("处理异常:", exception);
         return Result.fail(exception.getMessage());
     }
 
     @ExceptionHandler(value = LibertyException.class)
-    public Result doHandlerLibertyException(LibertyException libertyException) {
+    public Result<Object> doHandlerLibertyException(LibertyException libertyException) {
         logger.error("{}", libertyException.getMessage(), libertyException);
         return Result.fail(libertyException.getMessage());
     }
 
     @ExceptionHandler(value = ParametersException.class)
-    public Result doHandlerParametersException(ParametersException parametersException) {
+    public Result<Object> doHandlerParametersException(ParametersException parametersException) {
         logger.error("{}", parametersException.getMessage(), parametersException);
         return Result.fail(HttpStatus.BAD_REQUEST, parametersException.getMessage());
     }

@@ -1,6 +1,7 @@
 package com.racacia.regular.model.vo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.racacia.repository.model.enumerate.NormalStatus;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -20,7 +21,7 @@ public class UrbanRuralVo implements Serializable {
     private Integer areaClass;
     private String urbanRuralClass;
     private String postalCode;
-    private Integer normal;
+    private NormalStatus normal;
     @JsonProperty("children")
     private List<UrbanRuralVo> children;
 
@@ -104,11 +105,11 @@ public class UrbanRuralVo implements Serializable {
         this.postalCode = postalCode;
     }
 
-    public Integer getNormal() {
+    public NormalStatus getNormal() {
         return normal;
     }
 
-    public void setNormal(Integer normal) {
+    public void setNormal(NormalStatus normal) {
         this.normal = normal;
     }
 
