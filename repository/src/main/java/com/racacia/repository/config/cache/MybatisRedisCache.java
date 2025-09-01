@@ -9,7 +9,7 @@ import reactor.core.publisher.Flux;
 
 import java.time.Duration;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
@@ -47,16 +47,13 @@ public class MybatisRedisCache implements Cache {
 
     @Override
     public Object getObject(Object hashKey) {
-        try {
-            return reactiveRedisTemplate.opsForHash().get(id, hashKey).toFuture().get();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            logger.error("Failed to get object", e);
-            return null;
-        } catch (ExecutionException e) {
-            logger.error("Failed to get object", e);
-            return null;
-        }
+        AtomicReference<Object> hashValue = new AtomicReference<>();
+        reactiveRedisTemplate.opsForHash().get(id, hashKey).subscribe(consumer -> {
+            if (null != consumer) {
+                hashValue.set(consumer);
+            }
+        });
+        return hashValue.get();
     }
 
     @Override

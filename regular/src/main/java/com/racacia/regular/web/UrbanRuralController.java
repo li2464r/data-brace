@@ -83,7 +83,7 @@ public class UrbanRuralController extends BaseController {
     }
 
     /**
-     * 根据PID查询城市信息
+     * 根据PID查询城市信息(包括子集)
      *
      * @param ids 城市ID
      * @return Result {@link Result}

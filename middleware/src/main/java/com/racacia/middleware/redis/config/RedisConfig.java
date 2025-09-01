@@ -1,17 +1,6 @@
 package com.racacia.middleware.redis.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import com.racacia.middleware.redis.serializer.KeyRedisSerializer;
-import love.racacia.date.DateUtil;
-import love.racacia.json.JsonUtil;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -23,11 +12,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 
 
 /**
@@ -41,9 +25,6 @@ public class RedisConfig {
 
     public static final String REDIS_TEMPLATE = "RedisTemplate";
     public static final String REACTIVE_REDIS_TEMPLATE = "ReactiveRedisTemplate";
-    private final DateTimeFormatter DATE_TIME_FORMATTER_YYYY_MM_DD = DateTimeFormatter.ofPattern(DateUtil.YYYY_MM_DD);
-    private final DateTimeFormatter DATE_TIME_FORMATTER_HH_MM_SS = DateTimeFormatter.ofPattern(DateUtil.HH_MM_SS);
-    private final DateTimeFormatter DATE_TIME_FORMATTER_YYYY_MM_DD_HH_MM_SS = DateUtil.DEFAULT_DATETIME_FORMATTER;
 
     @Value("${spring.application.name:REDIS}")
     private String applicationName;
@@ -97,33 +78,5 @@ public class RedisConfig {
         RedisSerializationContext<String, Object> build = redisSerializationContextBuilder.build();
         return new ReactiveRedisTemplate<>(reactiveRedisConnectionFactory, build);
     }
-
-    /**
-     * 构建HashValue序列化构建ObjectMapper
-     *
-     * @author <a href="mailto:li2464r@163.com">R</a>
-     * @date 2024/3/8 008 15:11
-     */
-    private ObjectMapper buildHashValueObjectMapper() {
-
-        ObjectMapper jsonMapper = JsonUtil.createObjectMapper();
-
-        JavaTimeModule javaTimeModule = new JavaTimeModule();
-
-        javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DATE_TIME_FORMATTER_YYYY_MM_DD_HH_MM_SS));
-        javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DATE_TIME_FORMATTER_YYYY_MM_DD_HH_MM_SS));
-
-        javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DATE_TIME_FORMATTER_YYYY_MM_DD));
-        javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(DATE_TIME_FORMATTER_YYYY_MM_DD));
-
-        javaTimeModule.addSerializer(LocalTime.class, new LocalTimeSerializer(DATE_TIME_FORMATTER_HH_MM_SS));
-        javaTimeModule.addDeserializer(LocalTime.class, new LocalTimeDeserializer(DATE_TIME_FORMATTER_HH_MM_SS));
-        jsonMapper.registerModule(javaTimeModule);
-        jsonMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        // 创建JSON序列化器
-        // return JsonUtil.createObjectMapper();
-        return jsonMapper;
-    }
-
 }
 
