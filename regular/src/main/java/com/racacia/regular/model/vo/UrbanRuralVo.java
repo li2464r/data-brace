@@ -1,7 +1,9 @@
 package com.racacia.regular.model.vo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.racacia.repository.model.enumerate.AreaClass;
 import com.racacia.repository.model.enumerate.NormalStatus;
+import com.racacia.repository.model.enumerate.UrbanruralClass;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -18,8 +20,8 @@ public class UrbanRuralVo implements Serializable {
     private String areaCodeParent;
     private String abbreviateEn;
     private String abbreviateCh;
-    private Integer areaClass;
-    private String urbanRuralClass;
+    private AreaClass areaClass;
+    private UrbanruralClass urbanRuralClass;
     private String postalCode;
     private NormalStatus normal;
     @JsonProperty("children")
@@ -81,19 +83,19 @@ public class UrbanRuralVo implements Serializable {
         this.abbreviateCh = abbreviateCh;
     }
 
-    public Integer getAreaClass() {
+    public AreaClass getAreaClass() {
         return areaClass;
     }
 
-    public void setAreaClass(Integer areaClass) {
+    public void setAreaClass(AreaClass areaClass) {
         this.areaClass = areaClass;
     }
 
-    public String getUrbanRuralClass() {
+    public UrbanruralClass getUrbanRuralClass() {
         return urbanRuralClass;
     }
 
-    public void setUrbanRuralClass(String urbanRuralClass) {
+    public void setUrbanRuralClass(UrbanruralClass urbanRuralClass) {
         this.urbanRuralClass = urbanRuralClass;
     }
 

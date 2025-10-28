@@ -1,5 +1,8 @@
 package com.racacia.regular.model.dto;
 
+import com.racacia.repository.model.enumerate.AreaClass;
+import com.racacia.repository.model.enumerate.UrbanruralClass;
+
 public class UrbanRuralDto {
 
     /**
@@ -40,12 +43,12 @@ public class UrbanRuralDto {
     /**
      * 城市等级: 0:国;1:省,自治区,直辖市,特别行政区;2:地级市,地区,自治州,盟;3:市辖区,县级市,县,自治县,旗,自治旗,特区,林区;4:街道,镇,乡,民族乡,苏木,民族苏木,县辖区;5:居委会,村委会;
      */
-    private String areaClass;
+    private AreaClass areaClass;
 
     /**
      * 城乡等级: 100:城镇;110:城区;111:主城区;112:城乡结合区;120:镇区;121:镇中心区;122:镇乡结合区;123:特殊区域;200:乡村;210:乡中心区;220:村庄;
      */
-    private String urbanRuralClass;
+    private UrbanruralClass urbanRuralClass;
 
     /**
      * 邮编
@@ -108,19 +111,19 @@ public class UrbanRuralDto {
         this.abbreviateCh = abbreviateCh;
     }
 
-    public String getAreaClass() {
+    public AreaClass getAreaClass() {
         return areaClass;
     }
 
-    public void setAreaClass(String areaClass) {
+    public void setAreaClass(AreaClass areaClass) {
         this.areaClass = areaClass;
     }
 
-    public String getUrbanRuralClass() {
+    public UrbanruralClass getUrbanRuralClass() {
         return urbanRuralClass;
     }
 
-    public void setUrbanRuralClass(String urbanRuralClass) {
+    public void setUrbanRuralClass(UrbanruralClass urbanRuralClass) {
         this.urbanRuralClass = urbanRuralClass;
     }
 
