@@ -28,7 +28,7 @@ public class UrbanRuralController extends BaseController {
      * @author <a href="mailto:li2464r@163.com">R</a>
      * @date 2022/8/5 0005 10:29
      */
-    @GetMapping("/list/child")
+    // @GetMapping("/list/child")
     public Result<List<UrbanRuralVo>> selectChildUrbanRural(UrbanRuralDto urbanRuralDto) {
         return Result.<List<UrbanRuralVo>>ok().data(urbanRuralService.selectChildUrbanRural(urbanRuralDto));
     }
@@ -42,7 +42,7 @@ public class UrbanRuralController extends BaseController {
      * @date 2022/8/5 0005 10:34
      */
     @GetMapping("/list/level")
-    public Result selectLevelUrbanRural(UrbanRuralDto urbanRuralDto) {
+    public Result<List<UrbanRuralVo>> selectLevelUrbanRural(UrbanRuralDto urbanRuralDto) {
         return Result.<List<UrbanRuralVo>>ok().data(urbanRuralService.selectLevelUrbanRural(urbanRuralDto));
     }
 
@@ -94,7 +94,7 @@ public class UrbanRuralController extends BaseController {
         return Result.<List<UrbanRuralVo>>ok().data(urbanRuralService.selectUrbanRuralByAreaClassIds(ids));
     }
 
-    @PostMapping("/insert")
+    // @PostMapping("/insert")
     public Result<Object> insertUrbanRural() throws Exception {
         return Result.ok().data(urbanRuralService.insertUrbanRural());
     }

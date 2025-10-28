@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.racacia.regular.base.exception.LibertyException;
-import com.racacia.regular.common.constants.DataBraceConstant;
 import com.racacia.regular.model.dto.UrbanRuralDto;
 import com.racacia.regular.model.vo.UrbanRuralVo;
 import com.racacia.regular.service.UrbanRuralService;
@@ -103,10 +102,10 @@ public class UrbanRuralServiceImpl implements UrbanRuralService {
         if (null == urbanRuralBo) {
             return new ArrayList<>();
         }
-        QueryWrapper<UrbanRural> wrapper = new QueryWrapper<>();
-        wrapper.eq("pid", urbanRuralBo.getId());
-        wrapper.le("area_class", DataBraceConstant.URBANRURAL_AREACLASS.COUNTY.getCode());
-        List<UrbanRural> urbanRuralList = globalRepository.getUrbanRuralRepository().getUrbanRuralMapper().selectList(wrapper);
+        LambdaQueryWrapper<UrbanRural> urbanRuralLambdaQueryWrapper = Wrappers.lambdaQuery(UrbanRural.class);
+        urbanRuralLambdaQueryWrapper.eq(UrbanRural::getPid, urbanRuralBo.getId());
+        // urbanRuralLambdaQueryWrapper.le(UrbanRural::getAreaClass, AreaClass.COUNTRY);
+        List<UrbanRural> urbanRuralList = globalRepository.getUrbanRuralRepository().getUrbanRuralMapper().selectList(urbanRuralLambdaQueryWrapper);
         if (urbanRuralList.isEmpty()) {
             return new ArrayList<>();
         }
@@ -176,8 +175,8 @@ public class UrbanRuralServiceImpl implements UrbanRuralService {
             urbanRural.setAreaName(areaName);
             urbanRural.setAreaCodeParent(areaCodeParent);
             urbanRural.setAbbreviateEn(toCharacterInitials(areaName.replaceAll(reg, "")));
-            urbanRural.setAreaClass(String.valueOf(areaClass));
-            urbanRural.setUrbanRuralClass(urbanRuralClass);
+            // urbanRural.setAreaClass(String.valueOf(areaClass));
+            // urbanRural.setUrbanRuralClass(urbanRuralClass);
             globalRepository.getUrbanRuralRepository().saveOrUpdate(urbanRural);
         }
         return urbanRural;
