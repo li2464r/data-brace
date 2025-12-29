@@ -4,6 +4,7 @@ import love.racacia.result.HttpStatus;
 import love.racacia.result.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.UnsatisfiedServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -24,10 +25,17 @@ public class GlobalException extends RuntimeException {
         return Result.fail(libertyException.getMessage());
     }
 
-    @ExceptionHandler(value = ParametersException.class)
-    public Result<Object> doHandlerParametersException(ParametersException parametersException) {
-        logger.error("{}", parametersException.getMessage(), parametersException);
-        return Result.fail(HttpStatus.BAD_REQUEST, parametersException.getMessage());
+    @ExceptionHandler(value = {ParametersException.class, UnsatisfiedServletRequestParameterException.class})
+    public Result<Object> doHandlerParametersException(Exception exception) {
+        if (exception instanceof ParametersException parametersException) {
+            logger.error("{}", parametersException.getMessage(), parametersException);
+            return Result.fail(HttpStatus.BAD_REQUEST, parametersException.getMessage());
+        } else if (exception instanceof UnsatisfiedServletRequestParameterException unsatisfiedServletRequestParameterException) {
+            logger.error("{}", unsatisfiedServletRequestParameterException.getMessage(), unsatisfiedServletRequestParameterException);
+            return Result.fail(HttpStatus.BAD_REQUEST, "请求参数不满足要求");
+        }
+        logger.error("{}", exception.getMessage(), exception);
+        return Result.fail(HttpStatus.BAD_REQUEST, exception.getMessage());
     }
 
 }

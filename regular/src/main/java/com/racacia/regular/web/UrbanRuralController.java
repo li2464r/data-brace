@@ -41,7 +41,7 @@ public class UrbanRuralController extends BaseController {
      * @author <a href=":mailtoli2464r@163.com">R</a>
      * @date 2022/8/5 0005 10:34
      */
-    @GetMapping("/list/level")
+    @GetMapping(value = "/list/level")
     public Result<List<UrbanRuralVo>> selectLevelUrbanRural(UrbanRuralDto urbanRuralDto) {
         return Result.<List<UrbanRuralVo>>ok().data(urbanRuralService.selectLevelUrbanRural(urbanRuralDto));
     }

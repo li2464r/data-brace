@@ -31,7 +31,7 @@
         <dependency>
             <groupId>com.racacia</groupId>
             <artifactId>middleware</artifactId>
-            <version>3.3.0</version>
+            <version>${project.parent.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->

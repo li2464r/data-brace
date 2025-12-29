@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping
 public class IndexController {
 
-    @RequestMapping("/")
-    public String index(){
+    @RequestMapping(value = {"/", "index"})
+    public String index() {
         return """
                 <!DOCTYPE html>
                 <html lang="en">

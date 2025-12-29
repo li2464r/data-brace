@@ -35,14 +35,14 @@ public class RedisConfig {
      * @author R
      * @date 2021/12/30 0030 10:14
      */
-    @Bean(REDIS_TEMPLATE)
+    @Bean(name = REDIS_TEMPLATE)
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         // 配置连接
         redisTemplate.setConnectionFactory(redisConnectionFactory);
         // key 前缀
         // 设置key的序列化方式(可自定义序列化方式)
-        redisTemplate.setKeySerializer(new KeyRedisSerializer(applicationName));
+        redisTemplate.setKeySerializer(KeyRedisSerializer.key(applicationName));
         // 设置value的序列化方式(可自定义序列化方式)
         redisTemplate.setValueSerializer(RedisSerializer.json());
         // 设置hash类型的key序列化方式
@@ -58,7 +58,7 @@ public class RedisConfig {
      * @author <a href="mailto:li2464r@163.com">R</a>
      * @date 2024/3/8 008 18:06
      */
-    @Bean(REACTIVE_REDIS_TEMPLATE)
+    @Bean(name = REACTIVE_REDIS_TEMPLATE)
     public ReactiveRedisTemplate<String, Object> reactiveRedisTemplate(ReactiveRedisConnectionFactory reactiveRedisConnectionFactory) {
         RedisSerializationContext.RedisSerializationContextBuilder<String, Object> redisSerializationContextBuilder = RedisSerializationContext.newSerializationContext();
         // key 前缀

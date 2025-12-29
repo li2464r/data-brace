@@ -8,10 +8,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
-public class KeyRedisSerializer implements RedisSerializer<String> {
-
-    private final Charset charset;
-    private final String prefix;
+public record KeyRedisSerializer(Charset charset, String prefix) implements RedisSerializer<String> {
 
     public static KeyRedisSerializer key(String prefix) {
         return new KeyRedisSerializer(StandardCharsets.UTF_8, prefix);
@@ -21,7 +18,7 @@ public class KeyRedisSerializer implements RedisSerializer<String> {
         this(StandardCharsets.UTF_8, prefix);
     }
 
-    KeyRedisSerializer(Charset charset, String prefix) {
+    public KeyRedisSerializer(Charset charset, String prefix) {
         Assert.notNull(charset, "charset must not be null!");
         Assert.notNull(prefix, "prefix must not be null!");
         this.charset = charset;
